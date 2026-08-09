@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix Lag</title>
+    <style>
+        *{margin:0; padding:0; box-sizing:border-box; font-family:system-ui,sans-serif;}
+        body{background:linear-gradient(135deg,#0f172a,#1e293b); color:#e0f2fe; min-height:100vh; padding:15px;}
+        .container{max-width:420px; margin:0 auto;}
+        .bao-tri-screen{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,20,40,.97); z-index:999; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px;}
+        .bao-tri-box{background:rgba(30,60,100,.9); padding:30px 25px; border-radius:16px; border:2px solid #ff6b6b; max-width:400px;}
+        .icon{font-size:40px; margin-bottom:10px;}
+        .bao-tri-box h2{color:#ff6b6b; font-size:20px; margin-bottom:10px;}
+        .ket-noi{color:#facc15; font-size:12px; margin-top:10px;}
+        .ver{text-align:center; color:#38bdf8; font-size:14px; font-weight:600; margin-bottom:15px; padding:8px; background:rgba(0,200,255,.08); border-radius:10px;}
+        .hop{background:rgba(30,64,100,.85); padding:20px; border-radius:16px; border:2px solid rgba(0,200,255,.3); margin-top:10px;}
+        .tieude{color:#38bdf8; font-size:18px; font-weight:700; text-align:center; margin-bottom:12px;}
+        input{width:100%; padding:12px; background:rgba(15,30,50,.8); border:2px solid rgba(0,180,255,.4); color:#38bdf8; border-radius:10px; font-size:16px; text-align:center; outline:none; font-family:monospace; text-transform:uppercase; margin-bottom:12px;}
+        .btn{width:100%; padding:12px; border:none; border-radius:10px; font-weight:700; cursor:pointer; font-size:16px;}
+        .btn-xanh{background:linear-gradient(135deg,#0284c7,#38bdf8); color:#fff;}
+        .sai{color:#f87171; margin-top:10px; display:none; text-align:center; padding:8px; background:rgba(255,80,80,.1); border-radius:8px;}
+        .man-hinh-chinh{display:none; margin-top:10px;}
+        .chao{text-align:center; margin-bottom:15px;}
+        .chao h2{font-size:19px; color:#7dd3fc; margin-bottom:4px;}
+        .muc{background:rgba(0,200,255,.08); border:1px solid rgba(0,200,255,.18); padding:14px 12px; border-radius:12px; margin-bottom:8px; cursor:pointer;}
+        .muc strong{display:block; font-size:15px; color:#e0f2fe;}
+        .trang{display:none; background:rgba(15,40,70,.9); border-radius:12px; padding:15px; margin-top:10px; border:1px solid rgba(0,200,255,.2);}
+        .nut-quay{background:rgba(0,200,255,.15); color:#38bdf8; border:none; padding:8px 14px; border-radius:8px; margin-top:10px; cursor:pointer;}
+        .nut-admin{background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; width:100%; padding:10px; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; margin-top:15px;}
+        .khung-admin{background:rgba(239,68,68,.15); border:2px solid #ef4444; padding:12px; border-radius:10px; margin-top:15px; display:none;}
+        .khung-admin.hien{display:block;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="bao-tri-screen" id="manHinhBaoTri">
+            <div class="bao-tri-box">
+                <div class="icon">🔧</div>
+                <h2>ĐANG BẢO TRÌ</h2>
+                <p>App đang được bảo trì<br>Vui lòng chờ mở lại!</p>
+                <div class="ket-noi" id="trangThaiKetNoi">⚡ Kết nối máy chủ...</div>
+            </div>
+        </div>
+        <div id="manHinhKey">
+            <div class="ver">v1.0.0</div>
+            <div class="hop">
+                <div class="tieude">🔑 NHẬP KEY</div>
+                <input type="text" id="keyInput" placeholder="FFDDMMYYVN" maxlength="10">
+                <button class="btn btn-xanh" onclick="kiemTraKey()">🔓 MỞ NGAY</button>
+                <div class="sai" id="saiKey">❌ Sai Key!</div>
+
+                <button class="nut-admin" onclick="document.getElementById('khungAdmin').classList.toggle('hien')">🔐 TRUNG TÂM ADMIN</button>
+                <div class="khung-admin" id="khungAdmin">
+                    <p style="color:#fca5a5; margin-bottom:8px;"><b>Nhập Key Admin → vào Quản Lý</b></p>
+                    <input type="text" id="nhapAdmin" placeholder="Nhập Key Admin">
+                    <button class="btn" style="background:#b91c1c; color:#fff; margin-top:8px;" onclick="vaoTrangAdmin()">🔓 VÀO QUẢN LÝ</button>
+                </div>
+            </div>
+        </div>
+        <div class="man-hinh-chinh" id="manHinhChinh">
+            <div class="ver">v1.0.0 |ĐÃ MỞ ✅</div>
+            <div class="chao"><h2>✅ Đã mở thành công!</h2></div>
+            <div id="menu">
+                <div class="muc" onclick="moTrang('t1')"><strong>⚡ Fix Lag Nhẹ</strong></div>
+                <div class="muc" onclick="moTrang('t2')"><strong>🎯 Tầm Ảo Nhẹ</strong></div>
+            </div>
+            <div id="t1" class="trang"><h3>FIX LAG NHẸ</h3><p>✅ Đã áp dụng</p><button class="nut-quay" onclick="quayLai()">← Quay lại</button></div>
+            <div id="t2" class="trang"><h3>TẦM ẢO NHẸ</h3><p>✅ Đã áp dụng</p><button class="nut-quay" onclick="quayLai()">← Quay lại</button></div>
+        </div>
+    </div>
+
+<script>
+// ===== THAY MÃ BẢNG TÍNH CỦA BẠN VÀO ĐÂY =====
+const MA_BANG_TINH = "1YgjvxtzT2mvOmqlVZemQ26eC2HSI7gDIiGey3HtQHWg"; // ← Thay bằng mã Google Sheet của bạn
+const APP_DANG_KY = "APP2";
+// =============================================
+
+let dangBiKhoa = false;
+
+// === Đọc trạng thái từ máy chủ (tất cả máy cùng thấy) ===
+async function kiemTraMayChu(){
+    try{
+        const url = `https://docs.google.com/spreadsheets/d/${MA_BANG_TINH}/gviz/tq?tqx=out:json`;
+        const res = await fetch(url);
+        const text = await res.text();
+        const duLieu = JSON.parse(text.slice(47, -2));
+        
+        // Tìm trạng thái của app này
+        const hang = duLieu.table.rows.find(r => r.c[0]?.v === APP_DANG_KY);
+        const trangthai = hang?.c[1]?.v || "MO";
+        
+        document.getElementById('trangThaiKetNoi').textContent = trangthai === 'KHOA' ? '✅ Đã kết nối — ĐANG BẢO TRÌ' : '✅ Đã kết nối — HOẠT ĐỘNG';
+        
+        if(trangthai === 'KHOA' && !dangBiKhoa){
+            dangBiKhoa = true;
+            document.getElementById('manHinhBaoTri').style.display='flex';
+            document.getElementById('manHinhKey').style.display='none';
+            document.getElementById('manHinhChinh').style.display='none';
+        }
+        else if(trangthai !== 'KHOA' && dangBiKhoa){
+            dangBiKhoa = false;
+            document.getElementById('manHinhBaoTri').style.display='none';
+            document.getElementById('manHinhKey').style.display='block';
+        }
+    }catch(e){
+        document.getElementById('trangThaiKetNoi').textContent = '❌ Mất kết nối';
+    }
+}
+
+// Kiểm tra mỗi 10 giây → tất cả máy cùng cập nhật
+setInterval(kiemTraMayChu, 10000);
+window.onload = kiemTraMayChu;
+
+// === Key mở App ===
+function layKeyHomNay(){
+    const d=new Date(),n=String(d.getDate()).padStart(2,'0'),t=String(d.getMonth()+1).padStart(2,'0'),y=String(d.getFullYear()).slice(-2);
+    return`FF${n}${t}${y}VN`;
+}
+function kiemTraKey(){
+    const n=document.getElementById('keyInput').value.toUpperCase().trim();
+    if(n===layKeyHomNay()){
+        document.getElementById('manHinhKey').style.display='none';
+        document.getElementById('manHinhChinh').style.display='block';
+    }else{
+        document.getElementById('saiKey').style.display='block';
+        setTimeout(()=>document.getElementById('saiKey').style.display='none',3000);
+    }
+}
+function moTrang(i){document.getElementById('menu').style.display='none';document.querySelectorAll('.trang').forEach(t=>t.style.display='none');document.getElementById(i).style.display='block';}
+function quayLai(){document.querySelectorAll('.trang').forEach(t=>t.style.display='none');document.getElementById('menu').style.display='block';}
+
+// === Vào trang Admin ===
+function layKeyAdmin(){
+    const d=new Date(),n=String(d.getDate()).padStart(2,'0'),t=String(d.getMonth()+1).padStart(2,'0'),y=String(d.getFullYear()).slice(-2);
+    return`ADMINFF${n}${t}${y}VN`;
+}
+function vaoTrangAdmin(){
+    const nhap = document.getElementById('nhapAdmin').value.toUpperCase().trim();
+    if(nhap === layKeyAdmin()){ window.location.href = 'admin.html'; }
+    else { alert('❌ Sai Key Admin!'); }
+}
+</script>
+</body>
+</html>
