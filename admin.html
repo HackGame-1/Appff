@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 TRUNG TÂM QUẢN LÝ</title>
+    <style>
+        *{margin:0; padding:0; box-sizing:border-box; font-family:system-ui,sans-serif;}
+        body{background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; min-height:100vh; padding:15px;}
+        .container{max-width:420px; margin:0 auto; padding-top:40px;}
+        .tieu-de{text-align:center; font-size:24px; font-weight:700; margin-bottom:20px;}
+        .khung{background:rgba(0,0,0,.3); padding:20px; border-radius:16px; border:2px solid #fca5a5; text-align:center; margin-bottom:15px;}
+        .key-box{font-family:monospace; font-size:18px; font-weight:bold; background:#000; color:#fde047; padding:12px; border-radius:8px; margin:10px 0;}
+        .dong-app{display:flex; justify-content:space-between; align-items:center; padding:12px; background:rgba(0,0,0,.2); border-radius:8px; margin-bottom:8px;}
+        .btn{padding:6px 12px; border:none; border-radius:6px; font-weight:600; cursor:pointer;}
+        .btn-khoa{background:#dc2626; color:#fff;}
+        .btn-mo{background:#22c55e; color:#fff;}
+        .trangthai{font-size:13px; padding:3px 8px; border-radius:10px;}
+        .hoatdong{background:rgba(74,222,128,.2); color:#86efac;}
+        .dangkhoa{background:rgba(248,113,113,.2); color:#fca5a5;}
+        .thongbao{margin-top:15px; padding:10px; background:rgba(250,204,21,.1); border-radius:8px; color:#fef08a; font-size:13px;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tieu-de">🔐 TRUNG TÂM QUẢN LÝ</div>
+        <div class="khung">
+            <p><b>🔑 KEY ADMIN HỆ THỐNG</b></p>
+            <div class="key-box" id="keyAdminBox"></div>
+        </div>
+
+        <div class="dong-app">
+            <span>📱 App 1</span>
+            <span class="trangthai hoatdong" id="tt1">HOẠT ĐỘNG</span>
+            <div>
+                <button class="btn btn-khoa" onclick="capNhatTrangThai('APP1','KHOA')">KHÓA</button>
+                <button class="btn btn-mo" onclick="capNhatTrangThai('APP1','MO')">MỞ</button>
+            </div>
+        </div>
+        <div class="dong-app">
+            <span>⚡ App 2</span>
+            <span class="trangthai hoatdong" id="tt2">HOẠT ĐỘNG</span>
+            <div>
+                <button class="btn btn-khoa" onclick="capNhatTrangThai('APP2','KHOA')">KHÓA</button>
+                <button class="btn btn-mo" onclick="capNhatTrangThai('APP2','MO')">MỞ</button>
+            </div>
+        </div>
+        <div class="dong-app">
+            <span>🔧 App 3</span>
+            <span class="trangthai hoatdong" id="tt3">HOẠT ĐỘNG</span>
+            <div>
+                <button class="btn btn-khoa" onclick="capNhatTrangThai('APP3','KHOA')">KHÓA</button>
+                <button class="btn btn-mo" onclick="capNhatTrangThai('APP3','MO')">MỞ</button>
+            </div>
+        </div>
+        <div class="dong-app">
+            <span>🎯 App 4</span>
+            <span class="trangthai hoatdong" id="tt4">HOẠT ĐỘNG</span>
+            <div>
+                <button class="btn btn-khoa" onclick="capNhatTrangThai('APP4','KHOA')">KHÓA</button>
+                <button class="btn btn-mo" onclick="capNhatTrangThai('APP4','MO')">MỞ</button>
+            </div>
+        </div>
+
+        <div class="thongbao">
+            💡 Hướng dẫn: Mở Google Sheet → sửa ô B2/B3/B4 thành KHOA/MO → Tất cả máy tự cập nhật trong vòng 10 giây!
+        </div>
+    </div>
+
+<script>
+// ===== THAY MÃ BẢNG TÍNH CỦA BẠN VÀO ĐÂY =====
+const MA_BANG_TINH = "1YgjvxtzT2mvOmqlVZemQ26eC2HSI7gDIiGey3HtQHWg"; // ← Thay bằng mã Google Sheet của bạn
+// =============================================
+
+// === Hiển thị Key Admin hôm nay ===
+function layKeyAdmin(){
+    const d=new Date(),n=String(d.getDate()).padStart(2,'0'),t=String(d.getMonth()+1).padStart(2,'0'),y=String(d.getFullYear()).slice(-2);
+    return`ADMINFF${n}${t}${y}VN`;
+}
+document.getElementById('keyAdminBox').textContent = layKeyAdmin();
+
+// === Hướng dẫn cập nhật trạng thái ===
+function capNhatTrangThai(tenApp,trangThai){
+    alert(`✅ Vào Google Sheet → sửa ô của ${tenApp} thành: ${trangThai}\n\nTất cả máy sẽ tự hiện Bảo Trì trong vòng 10 giây!`);
+}
+</script>
+</body>
+</html>
