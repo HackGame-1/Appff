@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fix Lag</title>
+    <title>ONESHOT (Free)</title>
     <style>
         *{margin:0; padding:0; box-sizing:border-box; font-family:system-ui,sans-serif;}
         body{background:linear-gradient(135deg,#0f172a,#1e293b); color:#e0f2fe; min-height:100vh; padding:15px;}
         .container{max-width:420px; margin:0 auto;}
-        .bao-tri-screen{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,20,40,.97); z-index:999; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px;}
-        .bao-tri-box{background:rgba(30,60,100,.9); padding:30px 25px; border-radius:16px; border:2px solid #ff6b6b; max-width:400px;}
+        .man-hinh-cam{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(40,10,10,.97); z-index:999; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px;}
+        .hop-cam{background:rgba(70,20,20,.9); padding:30px 25px; border-radius:16px; border:2px solid #ff4444; max-width:400px;}
         .icon{font-size:40px; margin-bottom:10px;}
+        .hop-cam h2{color:#ff6b6b; font-size:20px; margin-bottom:10px;}
+        .nut-capnhat{background:linear-gradient(135deg,#ff4444,#cc0000); color:#fff; border:none; padding:12px 24px; border-radius:10px; font-size:16px; font-weight:700; cursor:pointer; margin-top:15px;}
+        .bao-tri-screen{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,20,40,.97); z-index:998; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px;}
+        .bao-tri-box{background:rgba(30,60,100,.9); padding:30px 25px; border-radius:16px; border:2px solid #ff6b6b; max-width:400px;}
         .bao-tri-box h2{color:#ff6b6b; font-size:20px; margin-bottom:10px;}
         .ket-noi{color:#facc15; font-size:12px; margin-top:10px;}
         .ver{text-align:center; color:#38bdf8; font-size:14px; font-weight:600; margin-bottom:15px; padding:8px; background:rgba(0,200,255,.08); border-radius:10px;}
@@ -33,22 +37,38 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="bao-tri-screen" id="manHinhBaoTri">
-            <div class="bao-tri-box">
-                <div class="icon">🔧</div>
-                <h2>ĐANG BẢO TRÌ</h2>
-                <p>App đang được bảo trì<br>Vui lòng chờ mở lại!</p>
-                <div class="ket-noi" id="trangThaiKetNoi">⚡ Kết nối máy chủ...</div>
-            </div>
+    <!-- Màn hình CẤM BẢN CŨ -->
+    <div class="man-hinh-cam" id="manHinhCamBan">
+        <div class="hop-cam">
+            <div class="icon">⚠️</div>
+            <h2>PHIÊN BẢN ĐÃ BỊ CẤM</h2>
+            <p>Phiên bản của bạn không còn được hỗ trợ<br>Vui lòng cập nhật bản mới nhất!</p>
+            <p style="color:#fca5a5; font-size:13px; margin-top:10px;">Bạn đang dùng: <b id="banDangDung">v1.0.0</b></p>
+            <p style="color:#86efac; font-size:13px;">Tối thiểu yêu cầu: <b id="banToiThieu">v1.0.0</b></p>
+            <p style="color:#fde047; font-size:12px;">Bị cấm từ bản: <b id="banBiCam">v0.9.0</b></p>
+            <button class="nut-capnhat" onclick="alert('Liên hệ Admin lấy bản mới nhất!')">📥 CẬP NHẬT NGAY</button>
         </div>
+    </div>
+
+    <!-- Màn hình BẢO TRÌ -->
+    <div class="bao-tri-screen" id="manHinhBaoTri">
+        <div class="bao-tri-box">
+            <div class="icon">🔧</div>
+            <h2>ĐANG BẢO TRÌ</h2>
+            <p>ONESHOT đang được bảo trì<br>Vui lòng chờ mở lại!</p>
+            <div class="ket-noi" id="trangThaiKetNoi">⚡ Kết nối máy chủ...</div>
+        </div>
+    </div>
+
+    <!-- Nội dung App -->
+    <div class="container">
         <div id="manHinhKey">
             <div class="ver">v1.0.0</div>
             <div class="hop">
                 <div class="tieude">🔑 NHẬP KEY</div>
                 <input type="text" id="keyInput" placeholder="FFDDMMYYVN" maxlength="10">
                 <button class="btn btn-xanh" onclick="kiemTraKey()">🔓 MỞ NGAY</button>
-                <div class="sai" id="saiKey">❌ Sai Key!</div>
+                <div class="sai" id="saiKey">❌ Sai Key! Lấy ở App 1 nhé</div>
 
                 <button class="nut-admin" onclick="document.getElementById('khungAdmin').classList.toggle('hien')">🔐 TRUNG TÂM ADMIN</button>
                 <div class="khung-admin" id="khungAdmin">
@@ -59,60 +79,87 @@
             </div>
         </div>
         <div class="man-hinh-chinh" id="manHinhChinh">
-            <div class="ver">v1.0.0 |ĐÃ MỞ ✅</div>
+            <div class="ver">v1.0.0</div>
             <div class="chao"><h2>✅ Đã mở thành công!</h2></div>
             <div id="menu">
                 <div class="muc" onclick="moTrang('t1')"><strong>⚡ Fix Lag Nhẹ</strong></div>
                 <div class="muc" onclick="moTrang('t2')"><strong>🎯 Tầm Ảo Nhẹ</strong></div>
+                <div class="muc" onclick="moTrang('t3')"><strong>⚡ Tăng cường CPU </strong></div>
             </div>
             <div id="t1" class="trang"><h3>FIX LAG NHẸ</h3><p>✅ Đã áp dụng</p><button class="nut-quay" onclick="quayLai()">← Quay lại</button></div>
             <div id="t2" class="trang"><h3>TẦM ẢO NHẸ</h3><p>✅ Đã áp dụng</p><button class="nut-quay" onclick="quayLai()">← Quay lại</button></div>
+            <div id="t3" class="trang"><h3>Tăng cường CPU</h3><p>✅ Đã áp dụng</p><button class="nut-quay" onclick="quayLai()">← Quay lại</button></div>
         </div>
     </div>
 
 <script>
 // ===== THAY MÃ BẢNG TÍNH CỦA BẠN VÀO ĐÂY =====
-const MA_BANG_TINH = "1YgjvxtzT2mvOmqlVZemQ26eC2HSI7gDIiGey3HtQHWg"; // ← Thay bằng mã Google Sheet của bạn
+const MA_BANG_TINH = "1YgjvxtzT2mvOmqlVZemQ26eC2HSI7gDIiGey3HtQHWg";
 const APP_DANG_KY = "APP2";
+const BAN_HIEN_TAI_APP = "v1.0.0";
 // =============================================
 
-let dangBiKhoa = false;
+// === So sánh phiên bản ===
+function kiemTraBanHopLe(banDangDung, banToiThieu, banBiCam){
+    const t1 = banDangDung.replace('v','').split('.').map(Number);
+    const tToiThieu = banToiThieu.replace('v','').split('.').map(Number);
+    const tCam = banBiCam.replace('v','').split('.').map(Number);
+    let cam = false;
+    for(let i=0; i<3; i++){
+        if(t1[i] < tCam[i]) { cam = true; break; }
+        if(t1[i] > tCam[i]) break;
+    }
+    let thapHon = false;
+    for(let i=0; i<3; i++){
+        if(t1[i] < tToiThieu[i]) { thapHon = true; break; }
+        if(t1[i] > tToiThieu[i]) break;
+    }
+    return {cam, thapHon};
+}
 
-// === Đọc trạng thái từ máy chủ (tất cả máy cùng thấy) ===
+// === Đọc trạng thái từ SHEET ===
 async function kiemTraMayChu(){
     try{
         const url = `https://docs.google.com/spreadsheets/d/${MA_BANG_TINH}/gviz/tq?tqx=out:json`;
         const res = await fetch(url);
         const text = await res.text();
         const duLieu = JSON.parse(text.slice(47, -2));
-        
-        // Tìm trạng thái của app này
         const hang = duLieu.table.rows.find(r => r.c[0]?.v === APP_DANG_KY);
-        const trangthai = hang?.c[1]?.v || "MO";
-        
-        document.getElementById('trangThaiKetNoi').textContent = trangthai === 'KHOA' ? '✅ Đã kết nối — ĐANG BẢO TRÌ' : '✅ Đã kết nối — HOẠT ĐỘNG';
-        
-        if(trangthai === 'KHOA' && !dangBiKhoa){
-            dangBiKhoa = true;
-            document.getElementById('manHinhBaoTri').style.display='flex';
-            document.getElementById('manHinhKey').style.display='none';
-            document.getElementById('manHinhChinh').style.display='none';
+        if(!hang) return;
+
+        const trangThai = hang?.c[1]?.v || "MO";
+        const banToiThieu = hang?.c[2]?.v || "v1.0.0";
+        const banBiCam = hang?.c[3]?.v || "v0.9.0";
+
+        document.getElementById('banDangDung').textContent = BAN_HIEN_TAI_APP;
+        document.getElementById('banToiThieu').textContent = banToiThieu;
+        document.getElementById('banBiCam').textContent = banBiCam;
+
+        // Kiểm tra cấm bản
+        const kq = kiemTraBanHopLe(BAN_HIEN_TAI_APP, banToiThieu, banBiCam);
+        if(kq.cam || kq.thapHon){
+            document.getElementById('manHinhCamBan').style.display = 'flex';
+            document.getElementById('manHinhBaoTri').style.display = 'none';
+            document.getElementById('manHinhKey').style.display = 'none';
+            document.getElementById('manHinhChinh').style.display = 'none';
+            return;
         }
-        else if(trangthai !== 'KHOA' && dangBiKhoa){
-            dangBiKhoa = false;
-            document.getElementById('manHinhBaoTri').style.display='none';
-            document.getElementById('manHinhKey').style.display='block';
+
+        // Kiểm tra bảo trì
+        document.getElementById('trangThaiKetNoi').textContent = 
+            trangThai === 'KHOA' ? 'ĐANG BẢO TRÌ' : 'HOẠT ĐỘNG';
+        if(trangThai === 'KHOA'){
+            document.getElementById('manHinhBaoTri').style.display = 'flex';
+            document.getElementById('manHinhKey').style.display = 'none';
+        } else {
+            document.getElementById('manHinhBaoTri').style.display = 'none';
         }
     }catch(e){
         document.getElementById('trangThaiKetNoi').textContent = '❌ Mất kết nối';
     }
 }
 
-// Kiểm tra mỗi 10 giây → tất cả máy cùng cập nhật
-setInterval(kiemTraMayChu, 10000);
-window.onload = kiemTraMayChu;
-
-// === Key mở App ===
+// === Key & chức năng ===
 function layKeyHomNay(){
     const d=new Date(),n=String(d.getDate()).padStart(2,'0'),t=String(d.getMonth()+1).padStart(2,'0'),y=String(d.getFullYear()).slice(-2);
     return`FF${n}${t}${y}VN`;
@@ -129,8 +176,6 @@ function kiemTraKey(){
 }
 function moTrang(i){document.getElementById('menu').style.display='none';document.querySelectorAll('.trang').forEach(t=>t.style.display='none');document.getElementById(i).style.display='block';}
 function quayLai(){document.querySelectorAll('.trang').forEach(t=>t.style.display='none');document.getElementById('menu').style.display='block';}
-
-// === Vào trang Admin ===
 function layKeyAdmin(){
     const d=new Date(),n=String(d.getDate()).padStart(2,'0'),t=String(d.getMonth()+1).padStart(2,'0'),y=String(d.getFullYear()).slice(-2);
     return`ADMINFF${n}${t}${y}VN`;
@@ -140,6 +185,7 @@ function vaoTrangAdmin(){
     if(nhap === layKeyAdmin()){ window.location.href = 'admin.html'; }
     else { alert('❌ Sai Key Admin!'); }
 }
+window.onload = ()=>{kiemTraMayChu(); setInterval(kiemTraMayChu,10000);};
 </script>
 </body>
 </html>
