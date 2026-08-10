@@ -54,7 +54,7 @@
             <div class="icon">⚠️</div>
             <h2>PHIÊN BẢN ĐÃ BỊ CẤM</h2>
             <p>Phiên bản của bạn không còn được hỗ trợ<br>Vui lòng cập nhật bản mới nhất!</p>
-            <p style="color:#fca5a5; font-size:13px; margin-top:12px;">Bạn đang dùng: <b id="banDangDung">v1.7.0</b></p>
+            <p style="color:#fca5a5; font-size:13px; margin-top:12px;">Bạn đang dùng: <b id="banDangDung">v1.0.0</b></p>
             <p style="color:#86efac; font-size:13px;">Yêu cầu tối thiểu: <b id="banToiThieu">v1.0.0</b></p>
             <p style="color:#fde047; font-size:12px;">Bị cấm từ bản: <b id="banBiCam">v0.9.0</b></p>
             <button class="nut-capnhat" onclick="alert('Liên hệ Admin lấy bản mới nhất!')">📥 CẬP NHẬT NGAY</button>
@@ -71,16 +71,16 @@
     </div>
 
     <div class="container">
-        <div class="ver">v1.0.0</div>
-        <div class="an-toan">🛡️  Hệ thống Key Hoạt động 24/7</div>
+        <div class="ver">v1.0.0 </div>
+        <div class="an-toan">🛡️ Hệ thống Key Hoạt động liên tục/div>
         <div class="tieu-de-chinh">
-            <h1>🔑 LẤY KEY MỞ APP</h1>
-            <p>Mỗi ngày tự lấy Key liên tục</p>
+            <h1>🔑 LẤY KEY </h1>
+            <p>Mỗi ngày tự lấy Key</p>
         </div>
 
         <div class="hop-key">
             <div class="nhan-key">✅ KEY SỬ DỤNG HÔM NAY</div>
-            <div class="cot-ngay" id="cotNgay">📅 Đang xác định ngày...</div>
+            <div class="cot-ngay" id="cotNgay">📅 Đang xác định cột ngày...</div>
             <div class="key-hien-thi" id="keyHienThi">
                 <span class="key-dang-tai">🔄 Đang lấy Key...</span>
             </div>
@@ -90,8 +90,8 @@
 
         <div class="thong-tin">
             <p>📅 Ngày 1 → Cột F | Ngày 2 → Cột G | Ngày 3 → Cột H</p>
-            <p>📅 Ngày 4 → Cột I | Ngày 5 → Cột J | Ngày 6 Quay lại cột F</p>
-            <p>✅ Viết Key sẵn các cột F,G,H,I,J → hệ thống tự lấy đúng cột</p>
+            <p>📅 Ngày 4 → Cột I | Ngày 5 → Cột J | Ngày 6 quay lại F</p>
+            <p>✅ Bản v1.0.0 = HỢP LỆ — Bản thấp hơn v0.9.0 MỚI BỊ CẤM</p>
         </div>
 
         <p class="cap-nhat-luc" id="capNhatLuc">— Đang kết nối —</p>
@@ -100,40 +100,51 @@
 <script>
 // ====================== CẤU HÌNH ======================
 const MA_BANG_TINH = "1YgjvxtzT2mvOmqlVZemQ26eC2HSI7gDIiGey3HtQHWg";
-const APP_DANG_KY = "APP1";
-const BAN_HIEN_TAI_APP = "v1.0.0";
-// Cột lấy Key theo thứ tự: F=5, G=6, H=7, I=8, J=9
-const COT_THEO_NGAY = [5, 6, 7, 8, 9]; // 5 cột, lặp lại
+const APP_DANG_KY = "SPEEDX";
+const BAN_HIEN_TAI_APP = "v1.0.0"; // ✅ ĐỂ LÀ v1.0.0
+const COT_THEO_NGAY = [5, 6, 7, 8, 9]; // F=5, G=6, H=7, I=8, J=9
+const TEN_COT = ['F','G','H','I','J'];
+const NGAY_BAT_DAU = new Date(2026, 7, 10);
 // =======================================================
 
 let KEY_HIEN_TAI = "";
 let cotDung = "";
 
+// === ✅ HÀM SO SÁNH PHIÊN BẢN ĐÃ SỬA ===
+function phanTichBan(banStr){
+    return banStr.replace('v','').split('.').map(Number);
+}
+function lonHonHoacBang(a, b){
+    // Trả về TRUE nếu bản a >= bản b
+    const tA = phanTichBan(a);
+    const tB = phanTichBan(b);
+    for(let i=0; i<3; i++){
+        if(tA[i] > tB[i]) return true;
+        if(tA[i] < tB[i]) return false;
+    }
+    return true; // BẰNG NHAU = HỢP LỆ ✅
+}
+function kiemTraBanHopLe(banDangDung, banToiThieu, banBiCam){
+    // Bị cấm: bản hiện tại < bản bị cấm
+    const biCam = !lonHonHoacBang(banDangDung, banBiCam);
+    // Thấp hơn yêu cầu: bản hiện tại < bản tối thiểu
+    const thapHon = !lonHonHoacBang(banDangDung, banToiThieu);
+    return {cam: biCam, thapHon: thapHon};
+}
+
 // === XÁC ĐỊNH CỘT HÔM NAY ===
 function layCotHomNay(){
-    const batDau = new Date(2026, 7, 10); // Bắt đầu từ 10/08/2026
     const homNay = new Date();
-    const soNgay = Math.floor((homNay - batDau) / (1000*60*60*24));
+    const soNgay = Math.floor((homNay - NGAY_BAT_DAU) / (1000*60*60*24));
     const viTri = soNgay % COT_THEO_NGAY.length;
     const soCot = COT_THEO_NGAY[viTri];
-    const tenCot = ['F','G','H','I','J'][viTri];
+    const tenCot = TEN_COT[viTri];
     cotDung = tenCot;
     document.getElementById('cotNgay').textContent = `📅 Hôm nay lấy từ Cột ${tenCot}`;
     return soCot;
 }
 
-// === KIỂM TRA PHIÊN BẢN ===
-function kiemTraBanHopLe(banDangDung, banToiThieu, banBiCam){
-    const t1 = banDangDung.replace('v','').split('.').map(Number);
-    const tToiThieu = banToiThieu.replace('v','').split('.').map(Number);
-    const tCam = banBiCam.replace('v','').split('.').map(Number);
-    let cam = false, thapHon = false;
-    for(let i=0; i<3; i++){if(t1[i] < tCam[i]){cam=true;break;}}
-    for(let i=0; i<3; i++){if(t1[i] < tToiThieu[i]){thapHon=true;break;}}
-    return {cam, thapHon};
-}
-
-// === LẤY KEY TỪ CỘT ĐÚNG ===
+// === LẤY KEY TỪ SHEET ===
 async function layKeyTuSheet(){
     try{
         document.getElementById('keyHienThi').innerHTML = '<span class="key-dang-tai">🔄 Đang lấy Key...</span>';
@@ -151,17 +162,18 @@ async function layKeyTuSheet(){
             return;
         }
 
-        // === LẤY KEY TỪ CỘT ĐÚNG THEO NGÀY ===
         KEY_HIEN_TAI = hang?.c[soCot]?.v || '';
         const trangThai = hang?.c[1]?.v || "MO";
         const banToiThieu = hang?.c[2]?.v || "v1.0.0";
         const banBiCam = hang?.c[3]?.v || "v0.9.0";
 
-        // === KIỂM TRA BẢN ===
+        // === KIỂM TRA BẢN ĐÃ SỬA ===
         document.getElementById('banDangDung').textContent = BAN_HIEN_TAI_APP;
         document.getElementById('banToiThieu').textContent = banToiThieu;
         document.getElementById('banBiCam').textContent = banBiCam;
         const kq = kiemTraBanHopLe(BAN_HIEN_TAI_APP, banToiThieu, banBiCam);
+        
+        // ✅ v1.0.0 >= v0.9.0 và >= v1.0.0 → KHÔNG BỊ CẤM
         if(kq.cam || kq.thapHon){
             document.getElementById('manHinhCamBan').style.display='flex';
             return;
@@ -182,7 +194,7 @@ async function layKeyTuSheet(){
             const gio = new Date();
             document.getElementById('capNhatLuc').textContent = `✅ Cập nhật lúc: ${gio.getHours().toString().padStart(2,'0')}:${gio.getMinutes().toString().padStart(2,'0')} | Cột ${cotDung}`;
         }else{
-            document.getElementById('keyHienThi').innerHTML = `<span class="key-loi">⚠️ Xin lỗi Hệ thông gặp trục trặc${cotDung}</span>`;
+            document.getElementById('keyHienThi').innerHTML = `<span class="key-loi">⚠️ Chưa có Key ở Cột ${cotDung}</span>`;
             document.getElementById('capNhatLuc').textContent = `— Viết Key vào Cột ${cotDung} trên Sheet —`;
         }
     }catch(e){
@@ -194,12 +206,12 @@ async function layKeyTuSheet(){
 function saoChepKey(){
     if(!KEY_HIEN_TAI) return;
     navigator.clipboard.writeText(KEY_HIEN_TAI).then(()=>{
-        alert(`✅ Đã sao chép Key ${cotDung}!\n\nDán vào App nhé!`);
+        alert(`✅ Đã sao chép Key từ Cột ${cotDung}!\n\nDán vào App 2 nhé!`);
     }).catch(()=>{
         const ta = document.createElement('textarea');
         ta.value = KEY_HIEN_TAI;
         document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-        alert(`✅ Đã sao chép Key ${cotDung}!\n\nDán vào App nhé!`);
+        alert(`✅ Đã sao chép Key từ Cột ${cotDung}!\n\nDán vào App 2 nhé!`);
     });
 }
 
@@ -208,5 +220,5 @@ function layKeyLai(){ layKeyTuSheet(); }
 window.onload = () => { layKeyTuSheet(); setInterval(layKeyTuSheet, 30000); };
 </script>
 </body>
-    </html>
-    
+                </html>
+                
