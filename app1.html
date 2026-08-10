@@ -84,17 +84,15 @@
 
         <div class="ghi-chu">
             ✅ Key thay đổi mỗi ngày<br>
-            ✅ Định dạng: FF + NgàyThángNăm + VN<br>
-            ✅ Đọc trạng thái từ Google Sheet
         </div>
         <div class="ver">Phiên bản: v1.0.1</div>
     </div>
 
 <script>
 // ====================== CẤU HÌNH ======================
-const PHIEN_BAN_HIEN_TAI = "v1.0.1";
+const PHIEN_BAN_HIEN_TAI = "v1.0.0";
 // === THAY BẰNG ID SHEET CỦA BẠN ===
-const SHEET_ID = "THAY-THAN-ID-SHEET-CUA-BAN";
+const SHEET_ID = "1YgjvxtzT2mvOmqlVZemQ26eC2HSI7gDIiGey3HtQHWg";
 const URL_SHEET = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&range=A2:D2`;
 
 // ====================== LẤY KEY THEO NGÀY ======================
@@ -126,7 +124,7 @@ function soSanhPhienBan(hienTai, yeuCau){
 // ====================== ĐỌC GOOGLE SHEET ======================
 async function docSheet(){
     try{
-        const res = await fetch(1YgjvxtzT2mvOmqlVZemQ26eC2HSI7gDIiGey3HtQHWg);
+        const res = await fetch(URL_SHEET);
         const text = await res.text();
         const data = JSON.parse(text.substring(47, text.length-2));
         const hang = data.table.rows[0]?.c;
