@@ -3,279 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ Fix Lag Game</title>
+    <title>⚡ APP 2 — Fix Lag + Tầm Ảo</title>
     <style>
         *{margin:0; padding:0; box-sizing:border-box; font-family:system-ui,sans-serif;}
-        body{background:linear-gradient(135deg,#050a18,#101a35,#050a18); color:#e6f0ff; min-height:100vh; padding:15px;}
+        body{background:linear-gradient(135deg,#0f172a,#1e293b); color:#f1f5f9; min-height:100vh; padding:15px;}
         .container{max-width:440px; margin:0 auto;}
         
-        .man-hinh-cam{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(20,5,5,.97); z-index:999; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;}
-        .hop-cam{background:rgba(50,10,10,.9); padding:30px 25px; border-radius:20px; border:2px solid #ff4444; box-shadow:0 0 40px rgba(255,68,68,.35);}
-        .icon{font-size:50px; margin-bottom:12px;}
-        .hop-cam h2{color:#ff6b6b; font-size:20px; margin-bottom:12px;}
-        .nut-capnhat{background:linear-gradient(135deg,#ff4444,#cc0000); color:#fff; border:none; padding:14px 28px; border-radius:12px; font-size:16px; font-weight:700; cursor:pointer; margin-top:18px;}
+        /* === TẦM ẢO === */
+        .tam-ao{position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); pointer-events:none; z-index:9999; display:none;}
+        .tam-ao.bat{display:block;}
+        .tam-ao .diem{position:absolute; background:#ff0000; border-radius:50%; transform:translate(-50%,-50%);}
+        .tam-ao .ngang{position:absolute; background:#ff0000; transform:translate(-50%,-50%);}
+        .tam-ao .doc{position:absolute; background:#ff0000; transform:translate(-50%,-50%);}
         
-        .bao-tri-screen{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(5,15,35,.97); z-index:998; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;}
-        .bao-tri-box{background:rgba(20,45,90,.9); padding:30px 25px; border-radius:20px; border:2px solid #00ccff; box-shadow:0 0 40px rgba(0,204,255,.3);}
-        .bao-tri-box h2{color:#66e0ff; font-size:20px; margin-bottom:10px;}
-        .ket-noi{color:#facc15; font-size:12px; margin-top:12px; padding:8px 12px; background:rgba(250,204,21,.1); border-radius:8px;}
+        /* === Bảo trì / Cấm === */
+        .man-hinh-bao-tri, .man-hinh-cam{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,.98); z-index:999; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;}
+        .hop-thong-bao{background:rgba(30,41,59,.95); padding:30px 20px; border-radius:16px; border:2px solid #ff6b6b; max-width:400px; width:100%;}
+        .hop-thong-bao.bao-tri{border-color:#facc15;}
+        .hop-thong-bao h2{font-size:20px; margin-bottom:15px;}
+        .hop-thong-bao.bao-tri h2{color:#facc15;}
+        .hop-thong-bao.cam h2{color:#ff6b6b;}
+        .hop-thong-bao p{color:#cbd5e1; font-size:14px; line-height:1.6;}
+        .icon{font-size:48px; margin-bottom:10px;}
         
-        .ver{text-align:center; color:#00ccff; font-size:14px; font-weight:600; margin-bottom:15px; padding:10px; background:linear-gradient(135deg,rgba(0,204,255,.15),rgba(59,130,246,.08)); border-radius:14px; border:1px solid rgba(0,204,255,.3);}
-        .tieu-de-chinh{text-align:center; margin-bottom:20px;}
-        .tieu-de-chinh h1{font-size:26px; background:linear-gradient(90deg,#00ccff,#0080ff,#4080ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-weight:900; letter-spacing:1px;}
-        .tieu-de-chinh p{color:#8fb8e6; font-size:13px; margin-top:6px;}
-        .an-toan{text-align:center; color:#4ade80; font-size:13px; margin-bottom:18px; padding:10px; background:rgba(74,222,128,.08); border-radius:12px; border:1px solid rgba(74,222,128,.2);}
-        
-        .cot-ngay{text-align:center; color:#facc15; font-size:12px; margin-bottom:12px; padding:6px 10px; background:rgba(250,204,21,.08); border-radius:8px;}
-        
-        .hop{background:linear-gradient(145deg,rgba(20,45,90,.85),rgba(8,15,35,.95)); padding:28px 22px; border-radius:24px; border:2px solid rgba(0,204,255,.25); box-shadow:0 10px 40px rgba(0,0,0,.5); margin-bottom:15px;}
-        .nhan-key{color:#66e0ff; font-size:15px; font-weight:600; margin-bottom:14px; text-align:center;}
-        input{width:100%; padding:15px; background:rgba(8,15,35,.9); border:2px solid rgba(0,204,255,.4); color:#66e0ff; border-radius:14px; font-size:18px; text-align:center; outline:none; font-family:monospace; text-transform:uppercase; margin-bottom:16px; transition:all .3s;}
-        input:focus{border-color:#00ccff; box-shadow:0 0 20px rgba(0,204,255,.35); background:rgba(10,20,45,.9);}
-        .btn{width:100%; padding:15px; border:none; border-radius:14px; font-weight:700; cursor:pointer; font-size:16px; transition:all .3s;}
+        /* === Khác === */
+        .box{background:rgba(30,41,59,.9); padding:20px; border-radius:16px; border:2px solid #00ccff;}
+        h1{color:#00ccff; font-size:19px; text-align:center; margin-bottom:18px;}
+        input{width:100%; padding:13px; background:rgba(0,0,0,.3); border:2px solid #00ccff; color:#fff; border-radius:10px; font-size:17px; text-align:center; outline:none; text-transform:uppercase; margin-bottom:12px; font-family:monospace;}
+        input:focus{border-color:#4ade80; box-shadow:0 0 15px rgba(74,222,128,.3);}
+        .btn{width:100%; padding:13px; background:linear-gradient(135deg,#0066cc,#00ccff); color:#fff; border:none; border-radius:10px; font-weight:bold; font-size:16px; cursor:pointer; transition:.2s;}
         .btn:active{transform:scale(.97);}
-        .btn-chinh{background:linear-gradient(135deg,#0066cc,#0099ff,#00ccff); color:#fff; box-shadow:0 6px 20px rgba(0,150,255,.35); letter-spacing:.5px;}
-        .sai{color:#f87171; margin-top:14px; display:none; text-align:center; padding:12px; background:rgba(248,113,113,.1); border-radius:12px; border:1px solid rgba(248,113,113,.2);}
-        .dang-tai{color:#facc15; text-align:center; margin-top:10px; font-size:13px;}
+        .sai{color:#ff6b6b; text-align:center; margin-top:10px; display:none; font-weight:bold; padding:8px; background:rgba(255,68,68,.1); border-radius:8px; font-size:14px;}
+        .dung{color:#4ade80; text-align:center; margin-top:10px; display:none; font-weight:bold; padding:8px; background:rgba(74,222,128,.1); border-radius:8px; font-size:14px;}
+        .ver{text-align:center; color:#94a3b8; font-size:10.5px; margin-top:10px; line-height:1.5;}
         
-        .man-hinh-chinh{display:none;}
-        .chao{text-align:center; margin-bottom:20px; padding:18px; background:linear-gradient(135deg,rgba(34,197,68,.1),rgba(59,130,246,.05)); border-radius:18px; border:1px solid rgba(74,222,128,.2);}
-        .chao h2{font-size:18px; color:#86efac; margin-bottom:4px;}
-        .chao p{color:#94a3b8; font-size:13px;}
+        .man-hinh-chinh{display:none; margin-top:15px;}
+        .tieu-danh-sach{color:#facc15; font-size:13px; margin:10px 0 8px; padding-bottom:6px; border-bottom:1px solid rgba(250,204,21,.2);}
+        .nhom-tinh-nang{display:grid; gap:7px; max-height:320px; overflow-y:auto; padding-right:5px; margin-bottom:12px;}
+        .muc{background:rgba(15,23,42,.8); padding:10px 12px; border-radius:10px; border:1px solid #334155; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;}
+        .muc strong{font-size:13px; color:#e2e8f0; width:100%; margin-bottom:6px;}
+        .nhan-moi{display:inline-block; background:linear-gradient(135deg,#f59e0b,#facc15); color:#78350f; font-size:8.5px; font-weight:800; padding:1px 4px; border-radius:4px; margin-left:5px; animation:nhanMoi 2s infinite;}
+        @keyframes nhanMoi{0%{box-shadow:0 0 3px #facc15;}50%{box-shadow:0 0 8px #facc15;}100%{box-shadow:0 0 3px #facc15;}}
         
-        .nhom-game{display:grid; gap:12px; margin-bottom:22px;}
-        .game{background:linear-gradient(145deg,rgba(20,45,90,.7),rgba(8,15,35,.95)); border:2px solid rgba(0,204,255,.25); padding:16px; border-radius:16px; cursor:pointer; transition:all .35s; text-align:center;}
-        .game:hover{border-color:#00ccff; transform:translateY(-2px);}
-        .game strong{display:block; font-size:16px; color:#e6f0ff; margin-bottom:4px;}
-        .game p{font-size:12px; color:#8fb8e6;}
+        .switch{position:relative; width:44px; height:24px;}
+        .switch input{opacity:0; width:0; height:0; padding:0; margin:0;}
+        .thanh{position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#334155; border-radius:24px; transition:.3s;}
+        .thanh:before{position:absolute; content:""; height:18px; width:18px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:.3s;}
+        input:checked + .thanh{background:linear-gradient(135deg,#22c55e,#4ade80); box-shadow:0 0 8px rgba(74,222,128,.35);}
+        input:checked + .thanh:before{transform:translateX(20px);}
         
-        .nhom-muc{display:grid; gap:12px; margin-top:10px;}
-        .muc{background:linear-gradient(145deg,rgba(20,45,90,.7),rgba(8,15,35,.95)); border:1px solid rgba(0,204,255,.25); padding:16px 18px; border-radius:16px; cursor:pointer; transition:all .35s;}
-        .muc:hover{border-color:#00ccff; transform:translateY(-2px);}
-        .muc strong{display:block; font-size:15px; color:#e6f0ff; margin-bottom:4px;}
-        .muc p{font-size:12px; color:#8fb8e6;}
-        .nhan-moi{display:inline-block; background:linear-gradient(135deg,#f59e0b,#facc15); color:#78350f; font-size:10px; font-weight:800; padding:2px 6px; border-radius:6px; margin-left:6px;}
+        .thanh-chinh{width:100%; margin-top:8px; display:flex; align-items:center; gap:8px; font-size:11px; color:#94a3b8;}
+        .thanh-chinh input[type="range"]{flex:1; padding:0; margin:0;}
+        .chon-mau{width:30px; height:24px; border:none; border-radius:6px; cursor:pointer; padding:0;}
         
-        .trang{display:none; background:linear-gradient(145deg,rgba(20,45,90,.8),rgba(8,15,35,.95)); border-radius:18px; padding:22px; margin-top:12px; border:1px solid rgba(0,204,255,.25);}
-        .trang h3{color:#66e0ff; font-size:17px; margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid rgba(0,204,255,.15);}
-        .nut-quay{background:rgba(0,204,255,.15); color:#66e0ff; border:none; padding:11px 18px; border-radius:12px; margin-top:16px; cursor:pointer; font-weight:600; width:100%;}
-        
-        .nut-bat-tat{display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(0,204,255,.08);}
-        .ten-tinh-nang{color:#e6f0ff; font-size:14px;}
-        .switch{position:relative; width:52px; height:28px;}
-        .switch input{opacity:0; width:0; height:0; padding:0;}
-        .thanh{position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#1e293b; border-radius:28px; transition:.35s;}
-        .thanh:before{position:absolute; content:""; height:22px; width:22px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:.35s;}
-        input:checked + .thanh{background:linear-gradient(135deg,#22c55e,#4ade80); box-shadow:0 0 12px rgba(74,222,128,.4);}
-        input:checked + .thanh:before{transform:translateX(24px);}
-        
-        .xem-truoc{display:flex; align-items:center; justify-content:center; height:100px; background:rgba(0,0,0,.25); border-radius:12px; margin:14px 0;}
-        .nhom-chon{margin:12px 0;}
-        .nhom-chon label{display:block; color:#94a3b8; font-size:13px; margin-bottom:8px;}
-        .gia-tri{padding:8px 14px; background:rgba(0,204,255,.1); border:1px solid rgba(0,204,255,.25); border-radius:10px; color:#66e0ff; font-size:13px; cursor:pointer;}
-        .gia-tri.chon{background:rgba(0,204,255,.25); border-color:#00ccff;}
-        .mau-tam{width:32px; height:32px; border-radius:50%; border:2px solid rgba(255,255,255,.3); cursor:pointer; display:inline-block; margin:2px;}
-        .mau-tam.chon{transform:scale(1.2); border-color:#fff; box-shadow:0 0 10px currentColor;}
-        .chu-y{color:#facc15; font-size:12px; margin-top:12px; padding:10px; background:rgba(250,204,21,.08); border-radius:10px; line-height:1.5;}
-        
-        .an{display:none !important;}
-        .an-tam{display:none !important;}
+        .nhat-ky-box{background:rgba(0,0,0,.25); padding:10px 12px; border-radius:10px; border:1px solid #1e293b; margin-top:10px;}
+        .tieu-nhat-ky{color:#facc15; font-size:12px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;}
+        .tieu-nhat-ky button{background:rgba(255,68,68,.2); color:#ff6b6b; border:none; padding:2px 8px; border-radius:4px; font-size:10px; cursor:pointer;}
+        .nhat-ky-danh-sach{font-size:11px; color:#94a3b8; line-height:1.8; max-height:100px; overflow-y:auto;}
+        .nhat-ky-danh-sach .rong{color:#475569; font-style:italic;}
+        .phien-ban-cuoi{text-align:center; color:#64748b; font-size:9.5px; margin-top:8px; padding-top:6px; border-top:1px dashed rgba(148,163,184,.25);}
     </style>
 </head>
 <body>
-    <div class="man-hinh-cam" id="manHinhCamBan">
-        <div class="hop-cam">
-            <div class="icon">⚠️</div>
-            <h2>PHIÊN BẢN ĐÃ BỊ CẤM</h2>
-            <p>Phiên bản của bạn không còn được hỗ trợ<br>Vui lòng cập nhật bản mới nhất!</p>
-            <p style="color:#fca5a5; font-size:13px; margin-top:12px;">Bạn đang dùng: <b id="banDangDung">v1.0.0</b></p>
-            <p style="color:#86efac; font-size:13px;">Yêu cầu tối thiểu: <b id="banToiThieu">v1.0.0</b></p>
-            <p style="color:#fde047; font-size:12px;">Bị cấm từ bản: <b id="banBiCam">v0.9.0</b></p>
-            <button class="nut-capnhat" onclick="alert('Liên hệ Admin lấy bản mới nhất!')">📥 CẬP NHẬT NGAY</button>
+    <div class="tam-ao" id="tamAo">
+        <div class="diem" id="tamDiem"></div>
+        <div class="ngang" id="tamNgang"></div>
+        <div class="doc" id="tamDoc"></div>
+    </div>
+
+    <div class="man-hinh-bao-tri" id="manHinhBaoTri">
+        <div class="hop-thong-bao bao-tri">
+            <div class="icon">🔧</div>
+            <h2>ĐANG BẢO TRÌ</h2>
+            <p id="thongBaoBaoTri">Vui lòng quay lại sau!</p>
         </div>
     </div>
 
-    <div class="bao-tri-screen" id="manHinhBaoTri">
-        <div class="bao-tri-box">
-            <div class="icon">🔧</div>
-            <h2>ĐANG BẢO TRÌ</h2>
-            <p>Hệ thống đang được nâng cấp<br>Vui lòng chờ mở lại!</p>
-            <div class="ket-noi" id="trangThaiKetNoi">⚡ Kết nối máy chủ...</div>
+    <div class="man-hinh-cam" id="manHinhCam">
+        <div class="hop-thong-bao cam">
+            <div class="icon">⚠️</div>
+            <h2>PHIÊN BẢN ĐÃ BỊ CẤM</h2>
+            <p id="thongBaoCam">Cập nhật bản mới nhất!</p>
         </div>
     </div>
 
     <div class="container">
         <div id="manHinhKey">
-            <div class="ver">v1.0.0 </div>
-            <div class="an-toan">🛡️TỰ ĐỘNG LẤY ĐÚNG KEY HÔM NAY</div>
-            <div class="tieu-de-chinh">
-                <h1>⚡ ONESHOT (Free)</h1>
-                <p>Nhập Key hôm nay</p>
-            </div>
-            <div class="cot-ngay" id="cotNgay">📅 Đang xác định Key...</div>
-            <div class="hop">
-                <div class="nhan-key">🔑 NHẬP KEY</div>
-                <input type="text" id="keyInput" placeholder="Dán Key vào đây" maxlength="50">
-                <div class="dang-tai" id="trangThaiKey">🔄 Đang kết nối máy chủ...</div>
-                <button class="btn btn-chinh" onclick="kiemTraKey()">Check Key</button>
-                <div class="sai" id="saiKey">❌ Sai Key!</div>
+            <div class="box">
+                <h1>🔑 NHẬP KEY</h1>
+                <input type="text" id="keyInput" placeholder="FFXXXXXVN" maxlength="50">
+                <button class="btn" onclick="kiemTraHeThong()">🔓 MỞ NGAY</button>
+                <div class="sai" id="saiKey">❌ SAI KEY!/div>
+                <div class="dung" id="dungKey">✅ ĐÚNG KEY, Đang tải giao diện....</div>
+                <div class="ver">PHIÊN BẢN : v1.0.0</div>
             </div>
         </div>
 
         <div class="man-hinh-chinh" id="manHinhChinh">
-            <div class="ver">v1.0.0</div>
-            <div class="an-toan">🛡️ AN TOÀN — không can thiệp game, ko lo ban acc</div>
-            <div class="chao">
-                <h2>✅ Đã mở thành công!</h2>
-                <p id="tenGame">👉 Chọn game bên dưới → ấn để BUFF/p>
-            </div>
-
-            <div id="manHinhChonGame">
-                <div class="nhom-game">
-                    <div class="game" onclick="chonGame('Free Fire')">
-                        <strong>🔥 Free Fire</strong>
-                        <p>Fix Lag + Tối ưu + Tầm Ảo Đầy Đủ</p>
+            <div class="box">
+                <h1>✅ TÍNH NĂNG</h1>
+                <div class="tieu-danh-sach">📋 Nhấn công tắc → Bật/Tắt + Ghi Nhật ký</div>
+                <div class="nhom-tinh-nang" id="danhSachTinhNang"></div>
+                
+                <div class="nhat-ky-box">
+                    <div class="tieu-nhat-ky">
+                        📝 NHẬT KÝ
+                        <button onclick="xoaNhatKy()">Xóa hết</button>
                     </div>
-                    <div class="game" onclick="chonGame('PUBG Mobile')">
-                        <strong>🎖️ PUBG Mobile</strong>
-                        <p>Fix Lag + Tối ưu + Tầm Ảo Đầy Đủ</p>
+                    <div class="nhat-ky-danh-sach" id="nhatKyBox">
+                        <span class="rong">Chưa bật tính năng nào...</span>
                     </div>
-                    <div class="game" onclick="chonGame('Liên Quân')">
-                        <strong>⚔️ Liên Quân</strong>
-                        <p>Chỉ Fix Lag — KHÔNG Tầm Ảo</p>
-                    </div>
-                    <div class="game" onclick="chonGame('COD Mobile')">
-                        <strong>💥 COD Mobile</strong>
-                        <p>Fix Lag + Tối ưu + Tầm Ảo Đầy Đủ</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="manHinhTinhNang" class="an">
-                <div class="nhom-muc" id="menu">
-                    <div class="muc" onclick="moTrang('t1')">
-                        <strong>⚡ Tăng Tốc & Fix Lag</strong>
-                        <p>Giảm giật, mượt khung hình, ổn định FPS</p>
-                        <span class="nhan-moi">MỚI</span>
-                    </div>
-                    <div class="muc" id="mucTamAo" onclick="moTrang('t2')">
-                        <strong>🎯 Tầm Ảo Nâng Cấp</strong>
-                        <p>Giảm rung tâm, tỉ lệ Heshot cao lên</p>
-                        <span class="nhan-moi">NÂNG CẤP</span>
-                    </div>
-                    <div class="muc" onclick="moTrang('t3')">
-                        <strong>🔥 Tối ưu CPU & RAM</strong>
-                        <p>Giải phóng bộ nhớ, máy chạy nhanh hơn</p>
-                    </div>
-                    <div class="muc" onclick="moTrang('t4')">
-                        <strong>❄️ Làm Mát & Ổn Định Mạng</strong>
-                        <p>Giảm nhiệt, giảm Ping, ổn định đường truyền</p>
-                    </div>
-                    <div class="muc" onclick="quayChonGame()">🔙 Chọn Game Khác</div>
-                </div>
-
-                <div id="t1" class="trang">
-                    <h3>⚡ TĂNG TỐC & FIX LAG — <span id="t1TenGame"></span></h3>
-                    <div class="nut-bat-tat"><span class="ten-tinh-nang">Bật Tối ưu Đồ Họa</span><label class="switch"><input type="checkbox" checked><span class="thanh"></span></label></div>
-                    <div class="nut-bat-tat"><span class="ten-tinh-nang">Tăng FPS & Giảm Giật</span><label class="switch"><input type="checkbox" checked><span class="thanh"></span></label></div>
-                    <div class="nut-bat-tat"><span class="ten-tinh-nang">Tắt Hiệu ứng Nặng</span><label class="switch"><input type="checkbox" checked><span class="thanh"></span></label></div>
-                    <p class="chu-y">✅ Tối ưu an toàn: giảm chi tiết hình ảnh, hiệu ứng thừa → máy mượt hơn mà không can thiệp vào game</p>
-                    <button class="nut-quay" onclick="quayLai()">← Quay lại Menu</button>
-                </div>
-
-                <div id="t2" class="trang">
-                    <h3>🎯 TẦM ẢO NÂNG CẤP</h3>
-                    <div class="nut-bat-tat"><span class="ten-tinh-nang">Bật Tầm Ảo Lớp Phủ</span><label class="switch"><input type="checkbox" id="batTamAo"><span class="thanh"></span></label></div>
-                    <div class="nut-bat-tat"><span class="ten-tinh-nang">Hiển thị trên cùng màn hình</span><label class="switch"><input type="checkbox" checked><span class="thanh"></span></label></div>
-                    <div class="nut-bat-tat"><span class="ten-tinh-nang">Tâm nhỏ nhẹ không cản chơi</span><label class="switch"><input type="checkbox" checked><span class="thanh"></span></label></div>
-                    
-                    <div class="xem-truoc">
-                        <div id="tamXemTruoc">
-                            <svg width="40" height="40" viewBox="0 0 40 40" id="svgTam">
-                                <circle cx="20" cy="20" r="3" fill="#00ff44"/>
-                                <line x1="20" y1="5" x2="20" y2="14" stroke="#00ff44" stroke-width="2"/>
-                                <line x1="20" y1="26" x2="20" y2="35" stroke="#00ff44" stroke-width="2"/>
-                                <line x1="5" y1="20" x2="14" y2="20" stroke="#00ff44" stroke-width="2"/>
-                                <line x1="26" y1="20" x2="35" y2="20" stroke="#00ff44" stroke-width="2"/>
-                            </svg>
-                        </div>
-                    </div>
-                    
-                    <div class="nhom-chon">
-                        <label>📐 Kích thước Tầm:</label>
-                        <div class="nhom-chon">
-                            <span class="gia-tri chon" onclick="chonKichThuoc(24)">Nhỏ</span>
-                            <span class="gia-tri" onclick="chonKichThuoc(40)">Vừa</span>
-                            <span class="gia-tri" onclick="chonKichThuoc(56)">Lớn</span>
-                            <span class="gia-tri" onclick="chonKichThuoc(72)">Rất Lớn</span>
-                        </div>
-                    </div>
-                    
-                    <div class="nhom-chon">
-                        <label>🎨 Màu sắc Tầm:</label>
-                        <div class="nhom-chon">
-                            <span class="mau-tam chon" style="background:#00ff44;" onclick="chonMau('#00ff44')"></span>
-                            <span class="mau-tam" style="background:#ff2222;" onclick="chonMau('#ff2222')"></span>
-                            <span class="mau-tam" style="background:#ffff00;" onclick="chonMau('#ffff00')"></span>
-                            <span class="mau-tam" style="background:#00ccff;" onclick="chonMau('#00ccff')"></span>
-                            <span class="mau-tam" style="background:#ffffff;" onclick="chonMau('#ffffff')"></span>
-                            <span class="mau-tam" style="background:#ff6600;" onclick="chonMau('#ff6600')"></span>
-                        </div>
-                    </div>
-                    
-                    <div class="nhom-chon">
-                        <label>⭕ Kiểu Tầm:</label>
-                        <div class="nhom-chon">
-                            <span class="gia-tri chon" onclick="chonKieu('cach')">Cách Đều</span>
-                            <span class="gia-tri" onclick="chonKieu('cham')">Chấm Giữa</span>
-                            <span class="gia-tri" onclick="chonKieu('ngang')">Ngang Dọc</span>
-                            <span class="gia-tri" onclick="chonKieu('tron')">Vòng Tròn</span>
-                        </div>
-                    </div>
-                    
-                    <p class="chu-y">🛡️ Tầm ảo chỉ là lớp phủ trên màn hình — KHÔNG can thiệp game, hoàn toàn an toàn!</p>
-                    <button class="nut-quay" onclick="quayLai()">← Quay lại Menu</button>
-                </div>
-
-                <div id="t3" class="trang">
-                    <h3>🔥 TỐI ƯU CPU & RAM</h3>
-                    <div class="nut-bat-tat"><span class="ten-tinh-nang">Giải phóng RAM tự động</span><label class="switch"><input type="checkbox" checked><span class="thanh"></span></label></div>
-                    <div class="nut-bat-tat"><span class="ten-tinh-nang">Tắt ứng dụng nền</span><label class="switch"><input type="checkbox" checked><span class="thanh"></span></label></div>
-                    <div class="nut-bat-tat"><span class="ten-tinh-nang">Ưu tiên CPU cho game</span><label class="switch"><input type="checkbox"><span class="thanh"></span></label></div>
-                    <p class="chu-y">✅ Khuyến nghị đóng ứng dụng khác trước khi chơi để hiệu quả tốt nhất!</p>
-                    <button class="nut-quay" onclick="quayLai()">← Quay lại Menu</button>
-                </div>
-
-                <div id="t4" class="trang">
-                    <h3>❄️ LÀM MÁT & ỔN ĐỊNH MẠNG</h3>
-                    <div class="nut-bat-tat"><span class="ten-tinh-nang">Ổn định tín hiệu WiFi/4G</span><label class="switch"><input type="checkbox" checked><span class="thanh"></span></label></div>
-                    <div class="nut-bat-tat"><span class="ten-tinh-nang">Giảm độ trễ Ping</span><label class="switch"><input type="checkbox" checked><span class="thanh"></span></label></div>
-                    <div class="nut-bat-tat"><span class="ten-tinh-nang">Tối ưu đường truyền</span><label class="switch"><input type="checkbox"><span class="thanh"></span></label></div>
-                    <p class="chu-y">✅ Giảm nhiệt máy & ổn định mạng giúp chơi mượt hơn!</p>
-                    <button class="nut-quay" onclick="quayLai()">← Quay lại Menu</button>
+                    <div class="phien-ban-cuoi">Phiên bản: v1.0.0</div>
                 </div>
             </div>
         </div>
     </div>
 
 <script>
-// ====================== CẤU HÌNH ======================
-const MA_BANG_TINH = "1YgjvxtzT2mvOmqlVZemQ26eC2HSI7gDIiGey3HtQHWg";
-const APP_DANG_KY = "app2";
-const BAN_HIEN_TAI_APP = "v1.0.0";
-const COT_THEO_NGAY = [5, 6, 7, 8, 9];
-const TEN_COT = ['F','G','H','I','J'];
-const NGAY_BAT_DAU = new Date(2026, 7, 10);
-// =======================================================
+// === CẤU HÌNH ===
+const PHIEN_BAN_HIEN_TAI = "v1.0.0";
+const SHEET_ID = "1YgjvxtzT2mvOmqlVZemQ26eC2HSI7gDIiGey3HtQHWg";
+const URL_SHEET = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&range=A2:D2`;
 
-let KEY_DUNG = "";
-let tenCotHomNay = "";
+let tamAoKichThuoc = 20, tamAoMau = "#ff0000", tamAoDaBat = false;
 
-function phanTichBan(banStr){ return banStr.replace('v','').split('.').map(Number); }
-function lonHonHoacBang(a, b){
-    const tA = phanTichBan(a);
-    const tB = phanTichBan(b);
-    for(let i=0; i<3; i++){
-        if(tA[i] > tB[i]) return true;
-        if(tA[i] < tB[i]) return false;
-  
+// === KEY ===
+function layKeyDung(){
+    const d=new Date(), n=String(d.getDate()).padStart(2,'0'), t=String(d.getMonth()+1).padStart(2,'0'), y=d.getFullYear();
+    return `FF${n}${t}${y}VN`;
+}
+
+// === SO SÁNH BẢN ===
+function soSanhPhienBan(a,b){
+    const t=a.replace('v','').split('.').map(Number), u=b.replace('v','').split('.').map(Number);
+    for(let i=0;i<3;i++){if(t[i]>u[i])return 1;if(t[i]<u[i])return -1;}return 0;
+}
+
+// === ĐỌC SHEET ===
+async function docSheet(){
+    try{
+        const r=await fetch(URL_SHEET), t=await r.text(), d=JSON.parse(t.substring(47,t.length-2)), h=d.table.rows[0]?.c;
+        return {trangThai:h?.[1]?.v||"MO", phienBanMin:h?.[2]?.v||"v1.0.0", phienBanCam:h?.[3]?.v||"v0.9.0"};
+    }catch{return {trangThai:"MO", phienBanMin:"v1.0.0", phienBanCam:"v0.0.0"};}
+}
+
+// === KIỂM TRA ===
+async function kiemTraHeThong(){
+    const n=document.getElementById('keyInput').value.toUpperCase().trim(), k=layKeyDung();
+    if(n!==k){document.getElementById('saiKey').style.display='block';return;}
+    document.getElementById('saiKey').style.display='none'; document.getElementById('dungKey').style.display='block';
+    const s=await docSheet();
+    if(s.trangThai==="KHOA"){document.getElementById('manHinhBaoTri').style.display='flex';return;}
+    if(PHIEN_BAN_HIEN_TAI===s.phienBanCam || soSanhPhienBan(PHIEN_BAN_HIEN_TAI,s.phienBanMin)<0){
+        document.getElementById('thongBaoCam').innerHTML=`Bản hiện tại: ${PHIEN_BAN_HIEN_TAI}<br>Yêu cầu: ${s.phienBanMin}<br>Bị cấm: ${s.phienBanCam}`;
+        document.getElementById('manHinhCam').style.display='flex';return;
+    }
+    setTimeout(()=>{document.getElementById('manHinhKey').style.display='none';document.getElementById('manHinhChinh').style.display='block';taiNhatKy();},800);
+}
+
+// === NHẬT KÝ ===
+let nhatKy=[];
+function capNhatNhatKy(ten,on){
+    const d=new Date(), g=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    nhatKy=nhatKy.filter(x=>!x.ten.includes(ten.slice(0,12)));
+    if(on)nhatKy.unshift({gio:g,ten:ten.slice(0,25)});
+    localStorage.setItem('nhatKyApp2',JSON.stringify(nhatKy));hienNhatKy();
+}
+function hienNhatKy(){document.getElementById('nhatKyBox').innerHTML=nhatKy.length?nhatKy.map(x=>`[${x.gio}] ✅ ${x.ten}`).join('<br>'):'<span class="rong">Chưa bật...</span>';}
+function xoaNhatKy(){nhatKy=[];localStorage.removeItem('nhatKyApp2');hienNhatKy();}
+function taiNhatKy(){const l=localStorage.getItem('nhatKyApp2');if(l)nhatKy=JSON.parse(l);hienNhatKy();}
+
+// === TÂM ẢO ===
+function capNhatTamAo(){
+    const d=document.getElementById('tamDiem'),n=document.getElementById('tamNgang'),doc=document.getElementById('tamDoc'),t=document.getElementById('tamAo');
+    if(tamAoDaBat){
+        t.classList.add('bat');
+        d.style.cssText='width:6px;height:6px;background:'+tamAoMau;
+        n.style.cssText=`width:${tamAoKichThuoc}px;height:2px;background:${tamAoMau};margin-left:-${tamAoKichThuoc/2}px`;
+        doc.style.cssText=`width:2px;height:${tamAoKichThuoc}px;background:${tamAoMau};margin-top:-${tamAoKichThuoc/2}px`;
+    }else t.classList.remove('bat');
+}
+
+// ====================== DANH SÁCH ĐẦY ĐỦ 50 TÍNH NĂNG ======================
+// === MUỐN HIỆN CÁI NÀO → ĐỔI "ẨN" THÀNH "HIỆN" ===
+const DANH_SACH = [
+    {id:'t1', ten:'⚡ Tăng Tốc & Fix Lag', trangThai:'HIỆN'},
+    {id:'tam', ten:'🎯 Tầm Ảo Nâng Cấp', trangThai:'HIỆN', isTamAo:true},
+    {id:'t3', ten:'🔥 Tối ưu CPU & RAM', trangThai:'HIỆN'},
+    {id:'t4', ten:'❄️ Làm Mát & Ổn Định Mạng', trangThai:'HIỆN'},
+    {id:'t5', ten:'🎨 Tối ưu Đồ Họa', trangThai:'HIỆN'},
+    {id:'t6', ten:'📈 Tăng FPS Tối Đa', trangThai:'ẨN'},
+    {id:'t7', ten:'🧹 Dọn Dẹp Bộ Nhớ', trangThai:'ẨN'},
+    {id:'t8', ten:'📶 Ổn Định Tín Hiệu', trangThai:'ẨN'},
+    {id:'t9', ten:'🔋 Tiết Kiệm Pin', trangThai:'ẨN'},
+    {id:'t10', ten:'🖱️ Nhạy Cảm Chạm', trangThai:'ẨN'},
+    {id:'t11', ten:'🔇 Tắt Hiệu Ứng Thừa', trangThai:'ẨN'},
+    {id:'t12', ten:'💾 Nén Dữ Liệu Game', trangThai:'ẨN'},
+    {id:'t13', ten:'🎮 Ưu Tiên CPU Cho Game', trangThai:'ẨN'},
+    {id:'t14', ten:'🌐 Tối ưu Đường Truyền', trangThai:'ẨN'},
+    {id:'t15', ten:'🔄 Tải Nhanh Tài Nguyên', trangThai:'ẨN'},
+    {id:'t16', ten:'⚙️ Tối ưu Hệ Thống', trangThai:'ẨN'},
+    {id:'t17', ten:'🎯 Tối ưu Độ Phân Giải', trangThai:'ẨN'},
+    {id:'t18', ten:'🔥 Tăng Tốc Đọc/Ghi', trangThai:'ẨN'},
+    {id:'t19', ten:'🧊 Giảm Nhiệt Độ CPU', trangThai:'ẨN'},
+    {id:'t20', ten:'📊 Hiển Thị FPS Thực', trangThai:'ẨN'},
+    {id:'t21', ten:'🛡️ Chống Giật Mạng', trangThai:'ẨN'},
+    {id:'t22', ten:'🎨 Tối ưu Màu Sắc', trangThai:'ẨN'},
+    {id:'t23', ten:'🔍 Tăng Độ Nét', trangThai:'ẨN'},
+    {id:'t24', ten:'⚡ Tối ưu Nền', trangThai:'ẨN'},
+    {id:'t25', ten:'📱 Tối ưu Màn Hình', trangThai:'ẨN'},
+    {id:'t26', ten:'🎵 Tắt Âm Thanh Thừa', trangThai:'ẨN'},
+    {id:'t27', ten:'🔋 Chế Độ Hiệu Năng', trangThai:'ẨN'},
+    {id:'t28', ten:'🌙 Chế Độ Tối', trangThai:'ẨN'},
+    {id:'t29', ten:'📉 Giảm Độ Trễ Chạm', trangThai:'ẨN'},
+    {id:'t30', ten:'💡 Tối ưu Độ Sáng', trangThai:'ẨN'},
+    {id:'t31', ten:'🔒 Khóa Tốc Độ CPU', trangThai:'ẨN'},
+    {id:'t32', ten:'📦 Giảm Kích Thước Dữ Liệu', trangThai:'ẨN'},
+    {id:'t33', ten:'🚀 Tăng Ưu Tiên Mạng', trangThai:'ẨN'},
+    {id:'t34', ten:'🧹 Xóa Bộ Nhớ Đệm', trangThai:'ẨN'},
+    {id:'t35', ten:'🎚️ Tối ưu Độ Nhạy', trangThai:'ẨN'},
+    {id:'t36', ten:'🌡️ Cảnh Báo Nhiệt Độ', trangThai:'ẨN'},
+    {id:'t37', ten:'⏱️ Tối ưu Thời Gian Phản Hồi', trangThai:'ẨN'},
+    {id:'t38', ten:'📈 Tối ưu Bộ Nhớ Đệm', trangThai:'ẨN'},
+    {id:'t39', ten:'🔧 Tự Sửa Lỗi Nhỏ', trangThai:'ẨN'},
+    {id:'t40', ten:'📋 Thông Tin Hệ Thống', trangThai:'ẨN'},
+    {id:'t41', ten:'🎛️ Tối ưu Đa Luồng', trangThai:'ẨN'},
+    {id:'t42', ten:'💨 Giảm Độ Mờ', trangThai:'ẨN'},
+    {id:'t43', ten:'🌈 Tối ưu Bóng Đổ', trangThai:'ẨN'},
+    {id:'t44', ten:'🔊 Giảm Chất Lượng Âm Thanh', trangThai:'ẨN'},
+    {id:'t45', ten:'📡 Tối ưu Dữ Liệu Nền', trangThai:'ẨN'},
+    {id:'t46', ten:'🛑 Tắt Dịch Vụ Thừa', trangThai:'ẨN'},
+    {id:'t47', ten:'💻 Tối ưu Độ Phân Giải', trangThai:'ẨN'},
+    {id:'t48', ten:'🔁 Tải Lại Tự Động', trangThai:'ẨN'},
+    {id:'t49', ten:'⚖️ Cân Bằng Hiệu Năng-Pin', trangThai:'ẨN'},
+    {id:'t50', ten:'🏆 Tối ưu Tối Đa Toàn Diện', trangThai:'ẨN'}
+];
+
+// === TẠO GIAO DIỆN ===
+const CONTAINER=document.getElementById('danhSachTinhNang');
+DANH_SACH.forEach((t,i)=>{
+    if(t.trangThai!=="HIỆN")return;
+    const m=(i<3)?'<span class="nhan-moi">MỚI</span>':'',id='sw_'+t.id;
+    let c='';
+    if(t.isTamAo)c=`<div class="thanh-chinh">K.thước:<input type="range" min="10" max="40" value="${tamAoKichThuoc}" oninput="tamAoKichThuoc=this.value;capNhatTamAo()">Màu:<input type="color" class="chon-mau" value="${tamAoMau}" oninput="tamAoMau=this.value;capNhatTamAo()"></div>`;
+    CONTAINER.insertAdjacentHTML('beforeend',`<div class="muc"><strong>${t.ten}${m}</strong><label class="switch"><input type="checkbox" id="${id}" onchange="${t.isTamAo?'tamAoDaBat=this.checked;capNhatTamAo();':'']}capNhatNhatKy('${t.ten}',this.checked)"><span class="thanh"></span></label>${c}</div>`);
+});
+</script>
+</body>
+    </html>
+    
