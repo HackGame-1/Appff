@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔑 APP 1 — Lấy Key</title>
+    <title>🔑Lấy Key</title>
     <style>
         *{margin:0; padding:0; box-sizing:border-box; font-family:system-ui,sans-serif;}
         body{background:linear-gradient(135deg,#0f172a,#1e293b); color:#f1f5f9; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;}
-        .man-bao-tri, .man-cam, .man-loi{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,.98); z-index:999; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;}
+        .man-bao-tri, .man-cam{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,.98); z-index:999; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;}
         .hop{background:rgba(30,41,59,.95); padding:30px 20px; border-radius:16px; border:2px solid #ffcc00; max-width:400px; width:100%;}
         .hop h2{color:#ffcc00; font-size:20px; margin:15px 0;}
         .hop p{color:#cbd5e1; font-size:14px; line-height:1.6;}
@@ -25,8 +25,8 @@
         .tieu button{background:rgba(255,68,68,.2); color:#ff6b6b; border:none; padding:3px 8px; border-radius:4px; font-size:11px; cursor:pointer;}
         .ds{font-size:11px; color:#cbd5e1; line-height:1.8; max-height:120px; overflow-y:auto;}
         .ds .rong{color:#64748b; font-style:italic;}
+        .trangthai-hien{margin-top:10px; font-size:11px; color:#94a3b8;}
         .ver{font-size:10px; color:#64748b; margin-top:10px; text-align:center;}
-        .debug{margin-top:10px; font-size:11px; color:#94a3b8; background:rgba(0,0,0,.2); padding:8px; border-radius:8px;}
     </style>
 </head>
 <body>
@@ -36,79 +36,64 @@
     <div class="man-cam" id="manCam">
         <div class="hop"><div class="icon">⚠️</div><h2>PHIÊN BẢN CŨ</h2><p id="txtCam">Cập nhật bản mới nhất!</p><button class="btn-tai-lai" onclick="location.reload()">🔄 Tải lại</button></div>
     </div>
-    <div class="man-loi" id="manLoi">
-        <div class="hop" style="border-color:#ff6b6b;"><div class="icon">❌</div><h2>LỖI ĐỌC SHEET</h2><p id="txtLoi">Kiểm tra ID và quyền Công khai!</p><button class="btn-tai-lai" onclick="location.reload()">🔄 Tải lại</button></div>
-    </div>
     <div class="box" id="manChinh">
-        <h1>🔑 NHẬN KEY</h1>
+        <h1>🔑 NHẬN KEY MỞ APP</h1>
         <button class="btn" id="btnChinh" onclick="batDau()">🔓 NHẬN KEY NGAY</button>
         <div class="dem-nguoc" id="dem" style="display:none;">60</div>
         <div class="key-box" id="keyBox">
             <div>✅ Key Hôm Nay:</div>
             <div class="key-hien-thi" id="keyHienThi"></div>
-            <div style="font-size:11px; color:#94a3b8;">Sao chép → Dán vào App 2</div>
+            <div style="font-size:11px; color:#94a3b8;">Sao chép</div>
         </div>
         <div class="nhat-ky">
             <div class="tieu">📝 NHẬT KÝ<button onclick="xoaNhatKy()">Xóa</button></div>
             <div class="ds" id="dsNhatKy"><span class="rong">Chưa có lịch sử...</span></div>
         </div>
-        <div class="debug" id="debugBox">🔄 Đang kiểm tra dữ liệu  hệ thống...</div>
-        <div class="ver">Phiên bản: v1.0.0</div>
+        <div class="trangthai-hien" id="trangThaiHien">🔄 Đang kiểm tra Hệ thống...</div>
+        <div class="ver">Phiên bản: v1.0.1</div>
     </div>
 <script>
-const APP_DANG_KY = "app1";
-const PHIEN_BAN = "v1.0.0";
-// === THAY ID SHEET CỦA BẠN VÀO ĐÂY ===
-const SHEET_ID = "1YgjvxtzT2mvOmqlVZemQ26eC2HSI7gDIiGey3HtQHWg";
-const LINK_SHEET = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&range=A1:A4`;
+// =============================================
+// 🔧 THAY LINK TỆP TRÊN GITHUB CỦA BẠN VÀO ĐÂY!
+// =============================================
+const LINK_TRANG_THAI = "https://raw.githubusercontent.com/HackGame-1/Appff/main/trạngthái.txt";
+const PHIEN_BAN = "v1.0.1";
+const BAN_TOI_THIEU = "v1.0.0";
+const BAN_CAM = "v0.9.0";
+// =============================================
 
-function layKey(){const d=new Date(),n=String(d.getDate()).padStart(2,'0'),t=String(d.getMonth()+1).padStart(2,'0'),y=d.getFullYear();return`FF${n}${t}${y}VN`;}
-function layGio(){const d=new Date();return`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
-function soSanh(a,b){const t=a.replace('v','').split('.').map(Number),u=b.replace('v','').split('.').map(Number);for(let i=0;i<3;i++){if(t[i]>u[i])return 1;if(t[i]<u[i])return-1;}return 0;}
+let dangBaoTri = false;
 
-let duLieuSheet=null;
-async function docSheet(){
-    try{
-        const res=await fetch(LINK_SHEET,{cache:'no-store'});
-        if(!res.ok) throw new Error("Lỗi kết nối: "+res.status);
-        const text=await res.text();
-        if(!text.includes("google.visualization.Query.setResponse")) throw new Error("Sheet chưa Công khai hoặc sai ID");
-        const json=JSON.parse(text.substring(47,text.length-2));
-        const h=json.table.rows;
+// === Kiểm tra trạng thái trên GitHub mỗi 5 GIÂY ===
+async function kiemTraGithub() {
+    try {
+        const res = await fetch(LINK_TRANG_THAI + "?t=" + Date.now(), {cache: "no-store"});
+        if (!res.ok) throw new Error("Lỗi kết nối");
+        const text = (await res.text()).trim().toUpperCase();
         
-        // === ĐỌC ĐÚNG Ô + BỎ KHOẢNG TRẮNG ===
-        const tenApp = h?.[0]?.c?.[0]?.v || "app1";
-        const trangThai = (h?.[1]?.c?.[0]?.v || "").trim().toUpperCase(); // Bỏ khoảng cách + Viết hoa
-        const banMin = h?.[2]?.c?.[0]?.v || "v1.0.0";
-        const banCam = h?.[3]?.c?.[0]?.v || "v0.0.0";
+        document.getElementById('trangThaiHien').innerHTML = 
+            "📡 Trạng thái: " + (text === "KHOA" ? "🔒 Bảo trì" : "✅ Mở bình thường");
 
-        // === HIỂN THỊ DỮ LIỆU ĐỌC ĐƯỢC ĐỂ KIỂM TRA ===
-        document.getElementById('debugBox').innerHTML = 
-        `📋 A1: ${tenApp || '(trống)'}<br>🔒 A2: ${trangThai || '(trống)'}<br>📌 A3: ${banMin}<br>🚫 A4: ${banCam}`;
-
-        return {tenApp,trangThai,banMin,banCam};
-    }catch(err){
-        document.getElementById('debugBox').innerHTML = `❌ Lỗi: ${err.message}`;
-        document.getElementById('txtLoi').textContent=err.message;
-        document.getElementById('manLoi').style.display='flex';
-        document.getElementById('manChinh').style.display='none';
-        return null;
+        if (text === "KHOA" && !dangBaoTri) {
+            dangBaoTri = true;
+            document.getElementById('manBaoTri').style.display = 'flex';
+            document.getElementById('manChinh').style.display = 'none';
+        }
+        else if (text === "MO" && dangBaoTri) {
+            dangBaoTri = false;
+            document.getElementById('manBaoTri').style.display = 'none';
+            document.getElementById('manChinh').style.display = 'block';
+        }
+    } catch {
+        document.getElementById('trangThaiHien').innerHTML = "📡 Kết nối...";
     }
 }
 
+// === Kiểm tra phiên bản ===
+function soSanh(a,b){const t=a.replace('v','').split('.').map(Number),u=b.replace('v','').split('.').map(Number);for(let i=0;i<3;i++){if(t[i]>u[i])return 1;if(t[i]<u[i])return-1;}return 0;}
 async function kiemTraHeThong(){
-    duLieuSheet=await docSheet();
-    if(!duLieuSheet) return false;
-    
-    // === BẢO TRÌ: ĐỌC Ô A2 ===
-    if(duLieuSheet.trangThai==="KHOA"){
-        document.getElementById('manBaoTri').style.display='flex';
-        document.getElementById('manChinh').style.display='none';
-        return false;
-    }
-    // === CẤM BẢN ===
-    if(PHIEN_BAN===duLieuSheet.banCam||soSanh(PHIEN_BAN,duLieuSheet.banMin)<0){
-        document.getElementById('txtCam').innerHTML=`Bản hiện tại: ${PHIEN_BAN}<br>Yêu cầu: ${duLieuSheet.banMin}`;
+    if(PHIEN_BAN===BAN_CAM||soSanh(PHIEN_BAN,BAN_TOI_THIEU)<0){
+        document.getElementById('txtCam').innerHTML=`Bản hiện tại: ${PHIEN_BAN}<br>Yêu cầu: ${BAN_TOI_THIEU}`;
         document.getElementById('manCam').style.display='flex';
         document.getElementById('manChinh').style.display='none';
         return false;
@@ -116,7 +101,10 @@ async function kiemTraHeThong(){
     return true;
 }
 
-let nhatKy=[];function taiNhatKy(){const luu=localStorage.getItem('nhatKyApp1');if(luu)nhatKy=JSON.parse(luu);hienNhatKy();}
+function layKey(){const d=new Date(),n=String(d.getDate()).padStart(2,'0'),t=String(d.getMonth()+1).padStart(2,'0'),y=d.getFullYear();return`FF${n}${t}${y}VN`;}
+function layGio(){const d=new Date();return`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
+
+let nhatKy=[];function taiNhatKy(){const luu=localStorage.getItem('nhatKyApp1');if(luu)nhatKy=JSON.parse(luu);}
 function hienNhatKy(){const box=document.getElementById('dsNhatKy');if(!nhatKy.length){box.innerHTML='<span class="rong">Chưa có lịch sử...</span>';return;}box.innerHTML=nhatKy.map((x,i)=>`<span style="color:${i===0?'#4ade80':'#cbd5e1'}">[${x.gio}] ✅ ${x.key}</span>`).join('<br>');}
 function xoaNhatKy(){nhatKy=[];localStorage.removeItem('nhatKyApp1');hienNhatKy();}
 function themNhatKy(key){nhatKy.unshift({gio:layGio(),key});if(nhatKy.length>20)nhatKy.pop();localStorage.setItem('nhatKyApp1',JSON.stringify(nhatKy));hienNhatKy();}
@@ -132,7 +120,10 @@ async function batDau(){
     },1000);
 }
 
+// === Bắt đầu kiểm tra mỗi 5 GIÂY ===
 taiNhatKy();kiemTraHeThong();
+kiemTraGithub();
+setInterval(kiemTraGithub, 5000); // 5000ms = 5 giây
 </script>
 </body>
 </html>
