@@ -3,233 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔑Lấy Key</title>
+    <title>🔑 Lấy Key</title>
     <style>
         *{margin:0; padding:0; box-sizing:border-box; font-family:system-ui,sans-serif;}
         body{background:linear-gradient(135deg,#0f172a,#1e293b); color:#f1f5f9; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;}
-        
-        /* === MÀN HÌNH BẢO TRÌ / CẤM === */
-        .man-hinh-bao-tri, .man-hinh-cam{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,.98); z-index:999; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;}
-        .hop-thong-bao{background:rgba(30,41,59,.95); padding:30px 20px; border-radius:16px; border:2px solid #ff6b6b; max-width:400px; width:100%;}
-        .hop-thong-bao.bao-tri{border-color:#facc15;}
-        .hop-thong-bao h2{font-size:20px; margin-bottom:15px;}
-        .hop-thong-bao.bao-tri h2{color:#facc15;}
-        .hop-thong-bao.cam h2{color:#ff6b6b;}
-        .hop-thong-bao p{color:#cbd5e1; font-size:14px; line-height:1.6;}
-        .icon{font-size:48px; margin-bottom:10px;}
-        
+        .man-bao-tri, .man-cam{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,.98); z-index:999; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;}
+        .hop{background:rgba(30,41,59,.95); padding:30px 20px; border-radius:16px; border:2px solid #ffcc00; max-width:400px; width:100%;}
+        .hop h2{color:#ffcc00; font-size:20px; margin:15px 0;}
+        .hop p{color:#cbd5e1; font-size:14px; line-height:1.6;}
+        .icon{font-size:48px;}
+        .btn-tai-lai{margin-top:20px; padding:10px 20px; background:#4ade80; color:#000; border:none; border-radius:8px; font-weight:bold; cursor:pointer;}
         .box{background:rgba(30,41,59,.9); padding:25px; border-radius:16px; border:2px solid #ffcc00; max-width:400px; width:100%;}
         h1{color:#ffcc00; font-size:20px; text-align:center; margin-bottom:20px;}
-        .btn{width:100%; padding:15px; background:linear-gradient(135deg,#cc8800,#ffcc00); color:#000; border:none; border-radius:10px; font-weight:bold; font-size:17px; cursor:pointer; transition:.2s;}
+        .btn{width:100%; padding:14px; background:linear-gradient(135deg,#cc8800,#ffcc00); color:#000; border:none; border-radius:10px; font-weight:bold; font-size:16px; cursor:pointer;}
         .btn:disabled{background:#475569; color:#94a3b8; cursor:not-allowed;}
-        .btn:active:not(:disabled){transform:scale(.97);}
-        .dem-nguoc{font-size:48px; font-weight:bold; color:#4ade80; margin:20px 0; text-align:center; font-family:monospace;}
-        .key-box{margin-top:20px; padding:15px; background:rgba(0,0,0,.4); border-radius:10px; border:2px dashed #00ccff; display:none; text-align:center;}
-        .da-xong{color:#4ade80; font-weight:bold; margin-bottom:8px;}
-        .key-hien-thi{font-size:22px; font-weight:bold; color:#00ccff; letter-spacing:2px; font-family:monospace; margin:8px 0;}
-        
-        /* === NHẬT KÝ === */
-        .nhat-ky-khoi{margin-top:20px; padding:12px; background:rgba(0,0,0,.25); border-radius:10px; border:1px solid #334155;}
-        .tieu-nhat-ky{color:#facc15; font-size:13px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;}
-        .tieu-nhat-ky button{background:rgba(255,68,68,.2); color:#ff6b6b; border:none; padding:3px 8px; border-radius:4px; font-size:11px; cursor:pointer;}
-        .nhat-ky-danh-sach{font-size:11.5px; color:#cbd5e1; line-height:1.8; max-height:150px; overflow-y:auto;}
-        .nhat-ky-danh-sach .rong{color:#64748b; font-style:italic;}
-        .nhat-ky-danh-sach .moi{color:#4ade80;}
-        
-        .ghi-chu{font-size:12px; color:#94a3b8; margin-top:15px; line-height:1.6; text-align:center;}
-        .ver{font-size:10px; color:#64748b; margin-top:12px; text-align:center;}
+        .dem-nguoc{font-size:48px; font-weight:bold; color:#4ade80; margin:15px 0; text-align:center; font-family:monospace;}
+        .key-box{margin-top:15px; padding:15px; background:rgba(0,0,0,.4); border-radius:10px; border:2px dashed #00ccff; display:none; text-align:center;}
+        .key-hien-thi{font-size:20px; font-weight:bold; color:#00ccff; letter-spacing:2px; font-family:monospace; margin:8px 0;}
+        .nhat-ky{margin-top:15px; padding:12px; background:rgba(0,0,0,.25); border-radius:10px; border:1px solid #334155;}
+        .tieu{color:#facc15; font-size:13px; margin-bottom:8px; display:flex; justify-content:space-between;}
+        .tieu button{background:rgba(255,68,68,.2); color:#ff6b6b; border:none; padding:3px 8px; border-radius:4px; font-size:11px; cursor:pointer;}
+        .ds{font-size:11px; color:#cbd5e1; line-height:1.8; max-height:120px; overflow-y:auto;}
+        .ds .rong{color:#64748b; font-style:italic;}
+        .ver{font-size:10px; color:#64748b; margin-top:10px; text-align:center;}
     </style>
 </head>
 <body>
-    <!-- === MÀN HÌNH BẢO TRÌ === -->
-    <div class="man-hinh-bao-tri" id="manHinhBaoTri">
-        <div class="hop-thong-bao bao-tri">
-            <div class="icon">🔧</div>
-            <h2>ĐANG BẢO TRÌ</h2>
-            <p id="thongBaoBaoTri">Hệ thống đang nâng cấp<br>Vui lòng quay lại sau!</p>
-        </div>
+    <div class="man-bao-tri" id="manBaoTri">
+        <div class="hop"><div class="icon">🔧</div><h2>APP 1 ĐANG BẢO TRÌ</h2><p>Vui lòng quay lại sau!</p><button class="btn-tai-lai" onclick="location.reload()">🔄 Tải lại</button></div>
     </div>
-
-    <!-- === MÀN HÌNH CẤM === -->
-    <div class="man-hinh-cam" id="manHinhCam">
-        <div class="hop-thong-bao cam">
-            <div class="icon">⚠️</div>
-            <h2>PHIÊN BẢN ĐÃ BỊ CẤM</h2>
-            <p id="thongBaoCam">Phiên bản bạn dùng đã cấm<br>Vui lòng cập nhật bản mới nhất!</p>
-        </div>
+    <div class="man-cam" id="manCam">
+        <div class="hop"><div class="icon">⚠️</div><h2>PHIÊN BẢN CŨ</h2><p id="txtCam">Cập nhật bản mới nhất!</p><button class="btn-tai-lai" onclick="location.reload()">🔄 Tải lại</button></div>
     </div>
-
-    <div class="box" id="manHinhChinh">
+    <div class="box" id="manChinh">
         <h1>🔑 NHẬN KEY MỞ APP</h1>
-        <button class="btn" id="btnNhanKey" onclick="batDauDem()">🔓 NHẬN KEY</button>
-        <div class="dem-nguoc" id="demNguoc" style="display:none;">60</div>
-        
+        <button class="btn" id="btnChinh" onclick="batDau()">Check Key</button>
+        <div class="dem-nguoc" id="dem" style="display:none;">60</div>
         <div class="key-box" id="keyBox">
-            <div class="da-xong">✅ HOÀN THÀNH!</div>
-            <div>Key Hôm Nay:</div>
+            <div>✅ Key Hôm Nay:</div>
             <div class="key-hien-thi" id="keyHienThi"></div>
             <div style="font-size:11px; color:#94a3b8;">Sao chép → Dán vào App 2</div>
         </div>
-
-        <!-- === NHẬT KÝ === -->
-        <div class="nhat-ky-khoi">
-            <div class="tieu-nhat-ky">
-                📝 NHẬT KÝ NHẬN KEY
-                <button onclick="xoaNhatKy()">Xóa hết</button>
-            </div>
-            <div class="nhat-ky-danh-sach" id="nhatKyBox">
-                <span class="rong">Chưa có lịch sử nhận key...</span>
-            </div>
-        </div>
-
-        <div class="ghi-chu">
-            ✅ Key thay đổi mỗi ngày<br>
+        <div class="nhat-ky">
+            <div class="tieu">📝 NHẬT KÝ<button onclick="xoaNhatKy()">Xóa</button></div>
+            <div class="ds" id="dsNhatKy"><span class="rong">Chưa có lịch sử...</span></div>
         </div>
         <div class="ver">Phiên bản: v1.0.0</div>
     </div>
-
 <script>
-// ====================== CẤU HÌNH ======================
-const APP_DANG_KY = "app1";
-const PHIEN_BAN_HIEN_TAI = "v1.0.0";
-// === THAY BẰNG ID SHEET CỦA BẠN ===
+const APP_DANG_KY = "APP1";
+const PHIEN_BAN = "v1.0.0";
 const SHEET_ID = "1YgjvxtzT2mvOmqlVZemQ26eC2HSI7gDIiGey3HtQHWg";
-const URL_SHEET = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&range=A2:D2`;
+// === ĐỌC Ô A1 → A4 ĐÚNG VỊ TRÍ ===
+const LINK_SHEET = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&range=A1:A4`;
 
-// ====================== LẤY KEY THEO NGÀY ======================
-function layKeyHienTai(){
-    const d = new Date();
-    const ngay = String(d.getDate()).padStart(2,'0');
-    const thang = String(d.getMonth()+1).padStart(2,'0');
-    const nam = d.getFullYear();
-    return `FF${ngay}${thang}${nam}VN`;
-}
+function layKey(){const d=new Date(),n=String(d.getDate()).padStart(2,'0'),t=String(d.getMonth()+1).padStart(2,'0'),y=d.getFullYear();return`FF${n}${t}${y}VN`;}
+function layGio(){const d=new Date();return`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
+function soSanh(a,b){const t=a.replace('v','').split('.').map(Number),u=b.replace('v','').split('.').map(Number);for(let i=0;i<3;i++){if(t[i]>u[i])return 1;if(t[i]<u[i])return-1;}return 0;}
 
-// ====================== LẤY GIỜ HIỆN TẠI ======================
-function layGio(){
-    const d = new Date();
-    return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-}
-
-// ====================== SO SÁNH PHIÊN BẢN ======================
-function soSanhPhienBan(hienTai, yeuCau){
-    const t1 = hienTai.replace('v','').split('.').map(Number);
-    const t2 = yeuCau.replace('v','').split('.').map(Number);
-    for(let i=0;i<3;i++){
-        if(t1[i] > t2[i]) return 1;
-        if(t1[i] < t2[i]) return -1;
-    }
-    return 0;
-}
-
-// ====================== ĐỌC GOOGLE SHEET ======================
+let duLieuSheet=null;
 async function docSheet(){
     try{
-        const res = await fetch(URL_SHEET);
-        const text = await res.text();
-        const data = JSON.parse(text.substring(47, text.length-2));
-        const hang = data.table.rows[0]?.c;
+        const res=await fetch(LINK_SHEET,{cache:'no-store'});
+        const text=await res.text();
+        const json=JSON.parse(text.substring(47,text.length-2));
+        const h=json.table.rows;
+        // === ĐỌC ĐÚNG Ô THEO YÊU CẦU ===
         return {
-            trangThai: hang?.[1]?.v || "MO",        // Cột B: MO / KHOA
-            phienBanMin: hang?.[2]?.v || "v1.0.0",   // Cột C: Phiên bản tối thiểu
-            phienBanCam: hang?.[3]?.v || "v0.9.0"    // Cột D: Phiên bản bị cấm
+            tenApp:   h?.[0]?.c?.[0]?.v || "app1",     // Ô A1 = Tên ứng dụng
+            trangThai:h?.[1]?.c?.[0]?.v || "MO",   // Ô A2 = Trạng thái
+            banMin:   h?.[2]?.c?.[0]?.v || "v1.0.0",// Ô A3 = Phiên bản tối thiểu
+            banCam:   h?.[3]?.c?.[0]?.v || "v0.0.0" // Ô A4 = Phiên bản bị cấm
         };
-    }catch(e){
-        console.log("Không đọc được Sheet → Mở bình thường");
-        return {trangThai:"MO", phienBanMin:"v1.0.0", phienBanCam:"v0.0.0"};
-    }
+    }catch(err){alert('Lỗi đọc Sheet! Kiểm tra ID và quyền Công khai.');return{tenApp:"APP1",trangThai:"MO",banMin:"v1.0.0",banCam:"v0.0.0"};}
 }
 
-// ====================== KIỂM TRA BẢO TRÌ + CẤM BẢN ======================
 async function kiemTraHeThong(){
-    const sheet = await docSheet();
-    
-    // === Bảo trì ===
-    if(sheet.trangThai === "KHOA"){
-        document.getElementById('manHinhBaoTri').style.display='flex';
-        document.getElementById('manHinhChinh').style.display='none';
-        return;
+    duLieuSheet=await docSheet();
+    // === Bảo trì theo Ô A2 ===
+    if(duLieuSheet.trangThai==="KHOA"){
+        document.getElementById('manBaoTri').style.display='flex';
+        document.getElementById('manChinh').style.display='none';
+        return false;
     }
-    
-    // === Cấm phiên bản cũ ===
-    if(PHIEN_BAN_HIEN_TAI === sheet.phienBanCam || soSanhPhienBan(PHIEN_BAN_HIEN_TAI, sheet.phienBanMin) < 0){
-        document.getElementById('thongBaoCam').innerHTML = 
-            `Phiên bản hiện tại: ${PHIEN_BAN_HIEN_TAI}<br>Yêu cầu tối thiểu: ${sheet.phienBanMin}<br>Phiên bản bị cấm: ${sheet.phienBanCam}`;
-        document.getElementById('manHinhCam').style.display='flex';
-        document.getElementById('manHinhChinh').style.display='none';
-        return;
+    // === Kiểm tra phiên bản theo Ô A3, A4 ===
+    if(PHIEN_BAN===duLieuSheet.banCam||soSanh(PHIEN_BAN,duLieuSheet.banMin)<0){
+        document.getElementById('txtCam').innerHTML=`Bản hiện tại: ${PHIEN_BAN}<br>Yêu cầu: ${duLieuSheet.banMin}`;
+        document.getElementById('manCam').style.display='flex';
+        document.getElementById('manChinh').style.display='none';
+        return false;
     }
+    return true;
 }
 
-// ====================== NHẬT KÝ ======================
-let nhatKy = [];
-function taiNhatKy(){
-    const luu = localStorage.getItem('nhatKyApp1');
-    if(luu) nhatKy = JSON.parse(luu);
-    hienNhatKy();
-}
-function luuNhatKy(){
-    localStorage.setItem('nhatKyApp1', JSON.stringify(nhatKy));
-    hienNhatKy();
-}
-function hienNhatKy(){
-    const box = document.getElementById('nhatKyBox');
-    if(nhatKy.length === 0){
-        box.innerHTML = '<span class="rong">Chưa có lịch sử nhận key...</span>';
-        return;
-    }
-    box.innerHTML = nhatKy.map((item, i) => 
-        `<span class="${i===0?'moi':''}">[${item.gio}] ✅ ${item.key}</span>`
-    ).join('<br>');
-}
-function xoaNhatKy(){
-    nhatKy = [];
-    localStorage.removeItem('nhatKyApp1');
-    hienNhatKy();
-}
-function themNhatKy(key){
-    nhatKy.unshift({ gio: layGio(), key: key });
-    if(nhatKy.length > 20) nhatKy.pop();
-    luuNhatKy();
+let nhatKy=[];function taiNhatKy(){const luu=localStorage.getItem('nhatKyApp1');if(luu)nhatKy=JSON.parse(luu);hienNhatKy();}
+function hienNhatKy(){const box=document.getElementById('dsNhatKy');if(!nhatKy.length){box.innerHTML='<span class="rong">Chưa có lịch sử...</span>';return;}box.innerHTML=nhatKy.map((x,i)=>`<span style="color:${i===0?'#4ade80':'#cbd5e1'}">[${x.gio}] ✅ ${x.key}</span>`).join('<br>');}
+function xoaNhatKy(){nhatKy=[];localStorage.removeItem('nhatKyApp1');hienNhatKy();}
+function themNhatKy(key){nhatKy.unshift({gio:layGio(),key});if(nhatKy.length>20)nhatKy.pop();localStorage.setItem('nhatKyApp1',JSON.stringify(nhatKy));hienNhatKy();}
+
+async function batDau(){
+    const ok=await kiemTraHeThong();if(!ok)return;
+    const btn=document.getElementById('btnChinh'),dem=document.getElementById('dem'),keyBox=document.getElementById('keyBox'),keyHienThi=document.getElementById('keyHienThi');
+    btn.disabled=true;dem.style.display='block';keyBox.style.display='none';
+    let t=60;dem.textContent=t;
+    const demNgay=setInterval(()=>{
+        t--;dem.textContent=t;
+        if(t<=0){clearInterval(demNgay);dem.style.display='none';const key=layKey();keyHienThi.textContent=key;keyBox.style.display='block';themNhatKy(key);setTimeout(()=>btn.disabled=false,3000);}
+    },1000);
 }
 
-// ====================== ĐẾM NGƯỢC 60 GIÂY ======================
-function batDauDem(){
-    const btn = document.getElementById('btnNhanKey');
-    const demDiv = document.getElementById('demNguoc');
-    const keyBox = document.getElementById('keyBox');
-    const keyHienThi = document.getElementById('keyHienThi');
-    
-    btn.disabled = true;
-    btn.style.display = 'none';
-    demDiv.style.display = 'block';
-    keyBox.style.display = 'none';
-    
-    let thoiGian = 60;
-    demDiv.textContent = thoiGian;
-    
-    const dem = setInterval(()=>{
-        thoiGian--;
-        demDiv.textContent = thoiGian;
-        
-        if(thoiGian <= 0){
-            clearInterval(dem);
-            demDiv.style.display = 'none';
-            const key = layKeyHienTai();
-            keyHienThi.textContent = key;
-            keyBox.style.display = 'block';
-            themNhatKy(key);
-            setTimeout(()=>{
-                btn.disabled = false;
-                btn.style.display = 'block';
-            }, 3000);
-        }
-    }, 1000);
-}
-
-// === KHI MỞ APP → KIỂM TRA SHEET + TẢI NHẬT KÝ ===
-kiemTraHeThong();
-taiNhatKy();
+taiNhatKy();kiemTraHeThong();
 </script>
 </body>
 </html>
