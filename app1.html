@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔑 Lấy Key</title>
+    <title>🔑 APP 1 — Lấy Key</title>
     <style>
         *{margin:0; padding:0; box-sizing:border-box; font-family:system-ui,sans-serif;}
         body{background:linear-gradient(135deg,#0f172a,#1e293b); color:#f1f5f9; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;}
-        .man-bao-tri, .man-cam{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,.98); z-index:999; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;}
+        .man-bao-tri, .man-cam, .man-loi{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,.98); z-index:999; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;}
         .hop{background:rgba(30,41,59,.95); padding:30px 20px; border-radius:16px; border:2px solid #ffcc00; max-width:400px; width:100%;}
         .hop h2{color:#ffcc00; font-size:20px; margin:15px 0;}
         .hop p{color:#cbd5e1; font-size:14px; line-height:1.6;}
@@ -26,6 +26,7 @@
         .ds{font-size:11px; color:#cbd5e1; line-height:1.8; max-height:120px; overflow-y:auto;}
         .ds .rong{color:#64748b; font-style:italic;}
         .ver{font-size:10px; color:#64748b; margin-top:10px; text-align:center;}
+        .debug{margin-top:10px; font-size:11px; color:#94a3b8; background:rgba(0,0,0,.2); padding:8px; border-radius:8px;}
     </style>
 </head>
 <body>
@@ -35,8 +36,11 @@
     <div class="man-cam" id="manCam">
         <div class="hop"><div class="icon">⚠️</div><h2>PHIÊN BẢN CŨ</h2><p id="txtCam">Cập nhật bản mới nhất!</p><button class="btn-tai-lai" onclick="location.reload()">🔄 Tải lại</button></div>
     </div>
+    <div class="man-loi" id="manLoi">
+        <div class="hop" style="border-color:#ff6b6b;"><div class="icon">❌</div><h2>LỖI ĐỌC SHEET</h2><p id="txtLoi">Kiểm tra ID và quyền Công khai!</p><button class="btn-tai-lai" onclick="location.reload()">🔄 Tải lại</button></div>
+    </div>
     <div class="box" id="manChinh">
-        <h1>🔑 NHẬN KEY MỞ APP</h1>
+        <h1>🔑 NHẬN KEY</h1>
         <button class="btn" id="btnChinh" onclick="batDau()">🔓 NHẬN KEY NGAY</button>
         <div class="dem-nguoc" id="dem" style="display:none;">60</div>
         <div class="key-box" id="keyBox">
@@ -48,13 +52,14 @@
             <div class="tieu">📝 NHẬT KÝ<button onclick="xoaNhatKy()">Xóa</button></div>
             <div class="ds" id="dsNhatKy"><span class="rong">Chưa có lịch sử...</span></div>
         </div>
-        <div class="ver">Phiên bản: v1.0.0</div>
+        <div class="debug" id="debugBox">🔄 Đang kiểm tra dữ liệu  hệ thống...</div>
+        <div class="ver">Phiên bản: v1.0.1 | App: APP1</div>
     </div>
 <script>
-const APP_DANG_KY = "app1";
-const PHIEN_BAN = "v1.0.0";
-const SHEET_ID = "1YgjvxtzT2mvOmqlVZemQ26eC2HSI7gDIiGey3HtQHWg";
-// === ĐỌC Ô A1 → A4 ĐÚNG VỊ TRÍ ===
+const APP_DANG_KY = "APP1";
+const PHIEN_BAN = "v1.0.1";
+// === THAY ID SHEET CỦA BẠN VÀO ĐÂY ===
+const SHEET_ID = "THAY-ID-SHEET-CỦA-BẠN-ĐÂY";
 const LINK_SHEET = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&range=A1:A4`;
 
 function layKey(){const d=new Date(),n=String(d.getDate()).padStart(2,'0'),t=String(d.getMonth()+1).padStart(2,'0'),y=d.getFullYear();return`FF${n}${t}${y}VN`;}
@@ -65,28 +70,43 @@ let duLieuSheet=null;
 async function docSheet(){
     try{
         const res=await fetch(LINK_SHEET,{cache:'no-store'});
+        if(!res.ok) throw new Error("Lỗi kết nối: "+res.status);
         const text=await res.text();
+        if(!text.includes("google.visualization.Query.setResponse")) throw new Error("Sheet chưa Công khai hoặc sai ID");
         const json=JSON.parse(text.substring(47,text.length-2));
         const h=json.table.rows;
-        // === ĐỌC ĐÚNG Ô THEO YÊU CẦU ===
-        return {
-            tenApp:   h?.[0]?.c?.[0]?.v || "app1",     // Ô A1 = Tên ứng dụng
-            trangThai:h?.[1]?.c?.[0]?.v || "MO",   // Ô A2 = Trạng thái
-            banMin:   h?.[2]?.c?.[0]?.v || "v1.0.0",// Ô A3 = Phiên bản tối thiểu
-            banCam:   h?.[3]?.c?.[0]?.v || "v0.0.0" // Ô A4 = Phiên bản bị cấm
-        };
-    }catch(err){alert('Lỗi đọc Sheet! Kiểm tra ID và quyền Công khai.');return{tenApp:"APP1",trangThai:"MO",banMin:"v1.0.0",banCam:"v0.0.0"};}
+        
+        // === ĐỌC ĐÚNG Ô + BỎ KHOẢNG TRẮNG ===
+        const tenApp = h?.[0]?.c?.[0]?.v || "app1";
+        const trangThai = (h?.[1]?.c?.[0]?.v || "").trim().toUpperCase(); // Bỏ khoảng cách + Viết hoa
+        const banMin = h?.[2]?.c?.[0]?.v || "v1.0.0";
+        const banCam = h?.[3]?.c?.[0]?.v || "v0.0.0";
+
+        // === HIỂN THỊ DỮ LIỆU ĐỌC ĐƯỢC ĐỂ KIỂM TRA ===
+        document.getElementById('debugBox').innerHTML = 
+        `📋 A1: ${tenApp || '(trống)'}<br>🔒 A2: ${trangThai || '(trống)'}<br>📌 A3: ${banMin}<br>🚫 A4: ${banCam}`;
+
+        return {tenApp,trangThai,banMin,banCam};
+    }catch(err){
+        document.getElementById('debugBox').innerHTML = `❌ Lỗi: ${err.message}`;
+        document.getElementById('txtLoi').textContent=err.message;
+        document.getElementById('manLoi').style.display='flex';
+        document.getElementById('manChinh').style.display='none';
+        return null;
+    }
 }
 
 async function kiemTraHeThong(){
     duLieuSheet=await docSheet();
-    // === Bảo trì theo Ô A2 ===
+    if(!duLieuSheet) return false;
+    
+    // === BẢO TRÌ: ĐỌC Ô A2 ===
     if(duLieuSheet.trangThai==="KHOA"){
         document.getElementById('manBaoTri').style.display='flex';
         document.getElementById('manChinh').style.display='none';
         return false;
     }
-    // === Kiểm tra phiên bản theo Ô A3, A4 ===
+    // === CẤM BẢN ===
     if(PHIEN_BAN===duLieuSheet.banCam||soSanh(PHIEN_BAN,duLieuSheet.banMin)<0){
         document.getElementById('txtCam').innerHTML=`Bản hiện tại: ${PHIEN_BAN}<br>Yêu cầu: ${duLieuSheet.banMin}`;
         document.getElementById('manCam').style.display='flex';
@@ -115,5 +135,4 @@ async function batDau(){
 taiNhatKy();kiemTraHeThong();
 </script>
 </body>
-            </html>
-                
+</html>
