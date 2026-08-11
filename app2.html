@@ -28,7 +28,9 @@
 
         .menu-screen{display:none;}
         .menu-box{background:rgba(30,41,59,.9); padding:20px; border-radius:16px; border:2px solid #00ccff;}
+        /* === 🔴 ẨN HẾT TÍNH NĂNG 5-50 NGAY BẰNG CSS === */
         .menu-item{padding:12px; background:rgba(0,0,0,.3); border-radius:10px; margin-bottom:8px; display:none; justify-content:space-between; align-items:center;}
+        /* === CHỈ HIỆN KHI CÓ CLASS HIỆN === */
         .menu-item.hien{display:flex !important;}
         .menu-item b{color:#00ccff; font-size:14px;}
         .moi{background:#ffcc00; color:#000; font-size:9px; padding:1px 5px; border-radius:4px; margin-left:6px; font-weight:bold;}
@@ -46,7 +48,7 @@
     <div class="container">
 
         <div class="man-bao-tri" id="manBaoTri">
-            <div class="hop"><div class="icon">🔧</div><h2>ONESHOT ĐANG BẢO TRÌ</h2><p>Vui lòng quay lại sau!</p><button class="btn-tai-lai" onclick="location.reload()">🔄 Tải lại</button></div>
+            <div class="hop"><div class="icon">🔧</div><h2> ONESHOT ĐANG BẢO TRÌ</h2><p>Vui lòng quay lại sau!</p><button class="btn-tai-lai" onclick="location.reload()">🔄 Tải lại</button></div>
         </div>
         <div class="man-cam" id="manCam">
             <div class="hop"><div class="icon">⚠️</div><h2>PHIÊN BẢN CŨ</h2><p id="txtCam">Cập nhật bản mới nhất!</p><button class="btn-tai-lai" onclick="location.reload()">🔄 Tải lại</button></div>
@@ -58,7 +60,7 @@
                 <input type="text" id="keyNhap" placeholder="Nhập key hôm nay..." autocomplete="off">
                 <button class="btn" onclick="kiemTraKey()">✅ Mở App</button>
                 <p class="sai" id="saiKey">❌ Key sai!</p>
-                <p class="trangthai-hien" id="trangThaiHien">🔄 Đang kiểm tra Hệ thống...</p>
+                <p class="trangthai-hien" id="trangThaiHien">🔄 Đang kiểm tra Hệ Thống...</p>
                 <p class="ver">Phiên bản: v1.1.0</p>
             </div>
         </div>
@@ -67,6 +69,7 @@
             <div class="menu-box">
                 <h1>⚡ BẢNG ĐIỀU KHIỂN</h1>
 
+                <!-- 4 tính năng LUÔN HIỆN → có class hien sẵn -->
                 <div class="menu-item hien" id="tinhnang_1">
                     <b>🎯 Tầm Ảo Nhẹ</b>
                     <button class="nut-bt tat" id="bt_tam" onclick="doiTrangThai(1)">TẮT</button>
@@ -83,6 +86,7 @@
                     <b>❌ Thoát App</b>
                 </div>
 
+                <!-- Tính năng 5-50: KHÔNG có class hien sẵn → ẨN bởi CSS -->
                 <div class="menu-item" id="tinhnang_5">
                     <b>🔋 Tối ưu Pin <span class="moi">MỚI</span></b>
                     <button class="nut-bt tat" id="bt_5" onclick="doiTrangThai(5)">TẮT</button>
@@ -279,7 +283,7 @@
 <script>
 // =============================================
 const LINK_TRANG_THAI = "https://raw.githubusercontent.com/HackGame-1/Appff/main/trangthai.txt";
-const PHIEN_BAN = "v1.1.0";
+const PHIEN_BAN = "v1.1.0"; // === CHỈ HIỆN 4 TÍNH NĂNG ===
 const BAN_TOI_THIEU = "v1.0.0";
 const BAN_CAM = "v0.9.0";
 // =============================================
@@ -319,20 +323,21 @@ function doiTrangThai(id){
     if(id===1) document.getElementById('tamAoBox').style.display = bat ? 'block' : 'none';
 }
 
-// === Hiện tính năng theo phiên bản ===
+// === ✅ CHỈ HIỆN ĐÚNG SỐ LƯỢNG THEO PHIÊN BẢN ===
 function laySoPhienBan(ver){
     const p = ver.replace('v','').split('.').map(Number);
     return p[0]*100 + p[1]*10 + (p[2]||0);
 }
 function hienTinhNangTheoPhienBan(){
-    const soHienTai = laySoPhienBan(PHIEN_BAN);
-    const soCoSo = laySoPhienBan("v1.0.1");
-    const soLuongHien = 4 + (soHienTai - soCoSo);
+    const soHienTai = laySoPhienBan(PHIEN_BAN);   // v1.0.1 = 101
+    const soCoSo = laySoPhienBan("v1.1.0");        // Từ bản này
+    const soLuongHien = 4 + (soHienTai - soCoSo);  // = 4 → CHỈ HIỆN 4
+
+    // === ẨN HẾT TRƯỚC → RỒI CHỈ HIỆN ĐÚNG ===
     for(let i=5; i<=50; i++){
         const el = document.getElementById('tinhnang_'+i);
         if(el){
-            if(i <= soLuongHien) el.classList.add('hien');
-            else el.classList.remove('hien');
+            el.classList.remove('hien'); // ✅ LUÔN ẨN nếu chưa đến phiên bản
         }
     }
 }
@@ -375,23 +380,21 @@ async function kiemTraHeThong(){
     return true;
 }
 
-// === Kiểm tra key → XÓA LƯU ĐĂNG NHẬP ===
+// === Kiểm tra key → LUÔN NHẬP LẠI, KHÔNG LƯU ===
 function kiemTraKey(){
     const keyDung = layKey();
     const keyNhap = document.getElementById('keyNhap').value.trim().toUpperCase();
     if(keyNhap === keyDung){
         document.getElementById('keyScreen').style.display='none';
         document.getElementById('menuScreen').style.display='block';
-        hienTinhNangTheoPhienBan();
+        hienTinhNangTheoPhienBan(); // ✅ Ẩn hết 5-50
         khoiPhucLenNut();
-        // === KHÔNG LƯU ĐĂNG NHẬP ===
-        // localStorage.setItem('app2_dangnhap','OK'); ← ĐÃ XÓA DÒNG NÀY
     }else{
         document.getElementById('saiKey').style.display='block';
     }
 }
 
-// === Thoát App → Xóa hết ===
+// === Thoát App ===
 function dungApp(){
     localStorage.removeItem('app2_dangnhap');
     document.getElementById('menuScreen').style.display='none';
@@ -401,15 +404,11 @@ function dungApp(){
     document.getElementById('tamAoBox').style.display='none';
 }
 
-// === MỖI LẦN MỞ APP → LUÔN HIỆN NHẬP KEY ===
+// === MỖI LẦN MỞ APP → LUÔN NHẬP KEY ===
 async function kiemTraTruoc(){
     const ok = await kiemTraHeThong();
     if(!ok) return;
     taiTrangThaiDaLuu();
-    // === KHÔNG KIỂM TRA ĐĂNG NHẬP CŨ → LUÔN HIỆN MÀN HÌNH NHẬP KEY ===
-    // if(localStorage.getItem('app2_dangnhap')==='OK'){ ← ĐÃ XÓA DÒNG NÀY
-    //     ...
-    // }
 }
 
 // === CHẠY ===
