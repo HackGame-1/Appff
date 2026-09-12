@@ -27,15 +27,23 @@
         input:checked + .toggle-slider {background:linear-gradient(90deg,#00f5d4,#00b4a0)}
         input:checked + .toggle-slider:before {transform:translateX(24px)}
 
+        .btn-kiemtra {background:linear-gradient(90deg,#f59e0b,#d97706);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:14px;font-weight:bold;cursor:pointer}
+        .btn-kiemtra:disabled {opacity:0.7;cursor:not-allowed}
+
         .popup {position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:9999;display:none}
         .popup.hien {display:flex}
         .popup-box {background:#fff;color:#000;width:90%;max-width:360px;border-radius:12px;overflow:hidden}
         .popup-header {padding:15px;font-size:18px;font-weight:bold;text-align:center}
-        .popup-body {padding:20px;font-size:15px;line-height:1.6}
+        .popup-body {padding:20px;font-size:15px;line-height:1.6;text-align:center}
         .popup-body input {width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;margin-top:10px;font-size:16px}
         .popup-footer {display:flex}
         .popup-footer button {flex:1;padding:14px;border:none;font-size:16px;font-weight:bold;cursor:pointer}
         .btn-xanh {background:#22c55e;color:#fff}
+        .btn-do {background:#ef4444;color:#fff}
+        .btn-lienhe {background:linear-gradient(90deg,#7b2cbf,#9d4edd);color:#fff;border-radius:12px;margin-top:20px;padding:14px;border:none;font-size:16px;font-weight:bold;cursor:pointer;width:100%}
+        
+        .loading-spinner {display:inline-block;width:40px;height:40px;border:4px solid #ddd;border-top-color:#22c55e;border-radius:50%;animation:spin 1s linear infinite;margin:10px 0}
+        @keyframes spin {to {transform:rotate(360deg)}}
     </style>
 </head>
 <body>
@@ -45,11 +53,11 @@
         <div class="popup-box">
             <div class="popup-header">🔑 Nhập Key</div>
             <div class="popup-body">
-                Nhập key để kích hoạt tính năng:<br>
+                Nhập key để kích hoạt app:<br>
                 <input type="text" id="keyInput" placeholder="FREEKEY">
             </div>
             <div class="popup-footer">
-                <button class="btn-xanh" onclick="kiemTraKey()">✅ Xác Nhận</button>
+                <button class="btn-xanh" id="btnXacNhan" onclick="kiemTraKey()">✅ Xác Nhận</button>
             </div>
         </div>
     </div>
@@ -60,7 +68,7 @@
             <div class="popup-header" id="tbTieuDe">Thông báo</div>
             <div class="popup-body" id="tbNoiDung"></div>
             <div class="popup-footer">
-                <button class="btn-xanh" onclick="dongTB()">✅ Đóng</button>
+                <button class="btn-xanh" id="btnDongTB" onclick="dongTB()">✅ Đóng</button>
             </div>
         </div>
     </div>
@@ -68,7 +76,7 @@
     <div class="container">
         <h1>🔥 ONESHOT (PRO)</h1>
 
-        <div class="menu-title">⚙️ CHỨC NĂNG</div>
+        <div class="menu-title">⚙️ CHỨC NĂNG - ĐỀU DÙNG ĐƯỢC</div>
         <div class="feature-list">
             <div class="feature-item">
                 <div class="feature-left">
@@ -95,10 +103,7 @@
                     <span class="feature-icon">🛡️</span>
                     <span class="feature-name">Kiểm Tra Virus</span>
                 </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="cb_virus" disabled onchange="doiChucNang('Kiểm Tra Virus', this.checked)">
-                    <span class="toggle-slider"></span>
-                </label>
+                <button class="btn-kiemtra" id="btnKiemTraVirus" disabled onclick="kiemTraVirus()">🔍 Kiểm Tra</button>
             </div>
             <div class="feature-item">
                 <div class="feature-left">
@@ -152,6 +157,16 @@
             </div>
             <div class="feature-item">
                 <div class="feature-left">
+                    <span class="feature-icon">🎯</span>
+                    <span class="feature-name">Tối Ưu Tâm Game</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="cb_tamgame" disabled onchange="doiChucNang('Tối Ưu Tâm Game', this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="feature-item">
+                <div class="feature-left">
                     <span class="feature-icon">🛡️</span>
                     <span class="feature-name">Chống Bug</span>
                 </div>
@@ -161,6 +176,8 @@
                 </label>
             </div>
         </div>
+
+        <button class="btn-lienhe" onclick="lienHe()">📩 LIÊN HỆ</button>
     </div>
 
     <script>
@@ -170,12 +187,29 @@
         function kiemTraKey() {
             const key = document.getElementById('keyInput').value.trim();
             if (!key) { hienTB('❌ Thiếu Key', 'Vui lòng nhập key!'); return; }
-            if (key !== KEY_DUNG) { hienTB('❌ Sai Key', 'Key không đúng!<br>Nhập: FREEKEY'); return; }
+            if (key !== KEY_DUNG) { hienTB('❌ Sai Key', 'Key không đúng!<br>Nhập: <b>FREEKEY</b>'); return; }
             
-            daKichHoat = true;
-            document.querySelectorAll('.feature-item input').forEach(cb => cb.disabled = false);
-            document.getElementById('popupKey').classList.remove('hien');
-            hienTB('✅ Kích Hoạt Thành Công!', '🎉 App đã sẵn sàng!<br>Bắt đầu sử dụng nào!', '✅ Bắt Đầu');
+            const btnXacNhan = document.getElementById('btnXacNhan');
+            btnXacNhan.disabled = true;
+            btnXacNhan.textContent = '⏳ Đang xác minh...';
+            
+            setTimeout(() => {
+                btnXacNhan.textContent = '✅ Xác Nhận';
+                btnXacNhan.disabled = false;
+                
+                daKichHoat = true;
+                document.querySelectorAll('.feature-item input').forEach(cb => cb.disabled = false);
+                document.getElementById('btnKiemTraVirus').disabled = false;
+                document.getElementById('popupKey').classList.remove('hien');
+                
+                // === THÔNG BÁO 1: KẾT NỐI THÀNH CÔNG ===
+                hienTB('✅ Kết Nối Thành Công!', 'Đã kết nối với hệ thống thành công!');
+                
+                // === THÔNG BÁO 2: CHÀO MỪNG - LUÔN HIỆN ===
+                setTimeout(() => {
+                    hienTB('🎉 CHÀO MỪNG!', 'Been mình vừa ra app premium á bạn nào muốn thì liên hệ mình nhé qua phở bò');
+                }, 2000);
+            }, 2000);
         }
 
         function doiChucNang(ten, trangThai) {
@@ -188,19 +222,72 @@
             let them = '';
             if (ten === 'Nhẹ Tâm' && trangThai) them = '<br>🎯 Tâm nhạy hơn, dễ bắn hơn!';
             if (ten === 'Tăng Tỉ Lệ Heshot' && trangThai) them = '<br>🎯 Tăng tỉ lệ bắn lên đầu lên cao!';
+            if (ten === 'Tối Ưu FPS' && trangThai) them = '<br>⚡ Game mượt hơn, giảm giật lag!';
+            if (ten === 'Tối Ưu Pin' && trangThai) them = '<br>🔋 Tiết kiệm pin, chơi lâu hơn!';
             hienTB(`${tt} ${ten}`, `${tt} ${ten}!${them}`);
+        }
+
+        function kiemTraVirus() {
+            if (!daKichHoat) {
+                hienTB('⚠️ Chưa Kích Hoạt', 'Nhập key: <b>FREEKEY</b> trước nhé!');
+                setTimeout(() => document.getElementById('popupKey').classList.add('hien'), 500);
+                return;
+            }
+            
+            const btn = document.getElementById('btnKiemTraVirus');
+            btn.disabled = true;
+            btn.textContent = '⏳ Đang kiểm tra...';
+            
+            hienTBWithLoading('🔍 Đang Kiểm Tra...', 'Đang quét toàn bộ tệp và ứng dụng...<br>Vui lòng chờ!');
+            
+            setTimeout(() => {
+                const coVirus = Math.random() < 0.3;
+                if (coVirus) {
+                    hienTBResult('⚠️ PHÁT HIỆN NGUY HIỂM!', 'Phát hiện tệp đáng ngờ trên thiết bị!<br>Khuyến nghị xóa ngay để đảm bảo an toàn!', 'btn-do', '🚨 Cảnh báo');
+                } else {
+                    hienTBResult('✅ AN TOÀN!', 'Không phát hiện virus hoặc phần mềm độc hại trên thiết bị!<br>Thiết bị của bạn đang được bảo vệ tốt!', 'btn-xanh', '✅ Đóng');
+                }
+                btn.disabled = false;
+                btn.textContent = '🔍 Kiểm Tra';
+            }, 2500);
         }
 
         function hienTB(tieuDe, noiDung, nutText='✅ Đóng') {
             document.getElementById('tbTieuDe').textContent = tieuDe;
             document.getElementById('tbNoiDung').innerHTML = noiDung;
-            document.querySelector('#popupTB .popup-footer button').textContent = nutText;
+            const btn = document.getElementById('btnDongTB');
+            btn.className = 'btn-xanh';
+            btn.textContent = nutText;
+            btn.disabled = false;
             document.getElementById('popupTB').classList.add('hien');
         }
+
+        function hienTBWithLoading(tieuDe, noiDung) {
+            document.getElementById('tbTieuDe').textContent = tieuDe;
+            document.getElementById('tbNoiDung').innerHTML = `${noiDung}<div class="loading-spinner"></div>`;
+            const btn = document.getElementById('btnDongTB');
+            btn.className = 'btn-xanh';
+            btn.textContent = '⏳ Đang kiểm tra...';
+            btn.disabled = true;
+            document.getElementById('popupTB').classList.add('hien');
+        }
+
+        function hienTBResult(tieuDe, noiDung, btnClass, btnText) {
+            document.getElementById('tbTieuDe').textContent = tieuDe;
+            document.getElementById('tbNoiDung').innerHTML = noiDung;
+            const btn = document.getElementById('btnDongTB');
+            btn.className = btnClass;
+            btn.textContent = btnText;
+            btn.disabled = false;
+        }
+
         function dongTB() {
             document.getElementById('popupTB').classList.remove('hien');
         }
+
+        function lienHe() {
+            hienTB('📩 LIÊN HỆ', 'FACEBOOK: https://www.facebook.com/share/1L7x6Kgwet/');
+        }
     </script>
 </body>
-                    </html>
-                        
+</html>
